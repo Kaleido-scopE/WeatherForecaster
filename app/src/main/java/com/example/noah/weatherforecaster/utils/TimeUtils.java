@@ -1,4 +1,4 @@
-package com.example.noah.weatherforecaster;
+package com.example.noah.weatherforecaster.utils;
 
 import java.text.DateFormat;
 import java.text.ParseException;

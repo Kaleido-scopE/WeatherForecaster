@@ -1,9 +1,15 @@
-package com.example.noah.weatherforecaster;
+package com.example.noah.weatherforecaster.activity;
 
 import android.os.AsyncTask;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import com.example.noah.weatherforecaster.R;
+import com.example.noah.weatherforecaster.entity.WeatherEntity;
+import com.example.noah.weatherforecaster.fragment.OverviewFragment;
+import com.example.noah.weatherforecaster.utils.WeatherInfoFetcher;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        new FetchItemsTask().execute();
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentById(R.id.fragment_container);
+
+        if (fragment == null) {
+            fragment = new OverviewFragment();
+            fm.beginTransaction().add(R.id.fragment_container, fragment).commit();
+        }
     }
 }

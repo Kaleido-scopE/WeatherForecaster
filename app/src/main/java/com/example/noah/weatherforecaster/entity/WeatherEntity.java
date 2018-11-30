@@ -1,4 +1,4 @@
-package com.example.noah.weatherforecaster;
+package com.example.noah.weatherforecaster.entity;
 
 import java.util.Date;
 
