@@ -10,6 +10,9 @@ public class TimeUtils {
     private static DateFormat DATE = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
     private static DateFormat DATE_MIN = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
     private static DateFormat WEEK = new SimpleDateFormat("E", Locale.getDefault());
+    private static DateFormat MONTH = new SimpleDateFormat("MM月", Locale.getDefault());
+    private static DateFormat DAY = new SimpleDateFormat("dd日", Locale.getDefault());
+    private static DateFormat HM = new SimpleDateFormat("HH:mm", Locale.getDefault());
 
     public static Date dateFromDateStr(String dateStr) throws ParseException {
         return DATE.parse(dateStr);
@@ -23,7 +26,19 @@ public class TimeUtils {
         return WEEK.format(date);
     }
 
+    public static String mdFromDate(Date date) {
+        String month =  MONTH.format(date);
+        String day = DAY.format(date);
+        if (day.charAt(0) == '0')
+            day = day.substring(1);
+        return month + day;
+    }
+
+    public static String hmFromDate(Date date) {
+        return HM.format(date);
+    }
+
     public static void main(String[] args) throws ParseException {
-        System.out.println(weekFromDate(new Date()));
+        System.out.println(hmFromDate(new Date()));
     }
 }
