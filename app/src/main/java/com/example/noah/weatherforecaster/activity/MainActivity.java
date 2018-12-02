@@ -20,7 +20,14 @@ public class MainActivity extends AppCompatActivity {
 
         if (fragment == null) {
             fragment = new OverviewFragment();
-            fm.beginTransaction().add(R.id.fragment_container, fragment).commit();
+            fm.beginTransaction().add(R.id.fragment_container, fragment, "OverViewFragment").commit();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager fm = getSupportFragmentManager();
+        fm.popBackStack();
+        fm.beginTransaction().show(fm.getFragments().get(0)).commit();
     }
 }

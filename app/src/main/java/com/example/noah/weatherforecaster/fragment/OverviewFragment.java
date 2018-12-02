@@ -4,11 +4,13 @@ package com.example.noah.weatherforecaster.fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.noah.weatherforecaster.R;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
@@ -31,6 +33,8 @@ public class OverviewFragment extends Fragment {
     private TextView[] maxTemNext; //预报日期最高温度数组
     private TextView[] weatherText; //天气描述数组
     private ImageView[] weatherIcon; //天气图标数组
+    private LinearLayout[] dayLayout; //各日期的主体Layout，用于点击进入详细信息视图
+    private View.OnClickListener layoutClickListener; //Layout的点击监听器，用于启动详细视图Fragment
 
 
     //-------------------------异步请求类-------------------------
@@ -74,6 +78,18 @@ public class OverviewFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle saveInstanceState) {
+        super.onSaveInstanceState(saveInstanceState);
+        Log.i("overview", "onSavedInstanceState");
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        Log.d("overview", String.valueOf(hidden));
+    }
+
     //-------------------------其他函数-------------------------
 
     /**
@@ -81,12 +97,32 @@ public class OverviewFragment extends Fragment {
      * @param v 当前fragment的View对象
      */
     private void initView(View v) {
+        layoutClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int clickerId = 0;
+                for (int i = 0; i < 7; i++)
+                    if (RIdManager.getRes("id", "day" + i) == v.getId()) {
+                        clickerId = i;
+                        break;
+                    }
+
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                Fragment detailFragment = DetailFragment.newInstance(clickerId);
+                fm.beginTransaction().add(R.id.fragment_container, detailFragment, "DetailFragment")
+                                    .hide(OverviewFragment.this)
+                                    .show(detailFragment)
+                                    .commit();
+            }
+        };
+
         dateNext = new TextView[7];
         weekNext = new TextView[7];
         minTemNext = new TextView[7];
         maxTemNext = new TextView[7];
         weatherText = new TextView[7];
         weatherIcon = new ImageView[7];
+        dayLayout = new LinearLayout[7];
 
         dateToday = v.findViewById(R.id.date_t);
         curTemToday = v.findViewById(R.id.cur_t);
@@ -102,6 +138,8 @@ public class OverviewFragment extends Fragment {
             }
             weatherIcon[i] = v.findViewById(RIdManager.getRes("id", "w_icon" + i));
             weatherText[i] = v.findViewById(RIdManager.getRes("id", "w_text" + i));
+            dayLayout[i] = v.findViewById(RIdManager.getRes("id", "day" + i));
+            dayLayout[i].setOnClickListener(layoutClickListener);
         }
     }
 
