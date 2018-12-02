@@ -141,8 +141,7 @@ public class OverviewFragment extends Fragment {
                 minTemNext[i].setText(minTem);
                 maxTemNext[i].setText(maxTem);
             }
-            weatherIcon[i].setImageDrawable(getResources().
-                    getDrawable(RIdManager.getRes("drawable", "i" + forecast[i].getWeatherCode())));
+            weatherIcon[i].setImageResource(RIdManager.getRes("drawable", "i" + forecast[i].getWeatherCode()));
             weatherText[i].setText(forecast[i].getWeatherName());
         }
     }
