@@ -8,6 +8,7 @@ import com.example.noah.weatherforecaster.R;
 
 public abstract class SingleFragmentActivity extends AppCompatActivity {
 
+    //Act as onCreate in use
     protected abstract Fragment createFragment();
 
     @Override

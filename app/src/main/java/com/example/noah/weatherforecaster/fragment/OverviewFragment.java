@@ -98,6 +98,7 @@ public class OverviewFragment extends Fragment {
                         break;
                     }
 
+                //带参数启动承载详细视图的Activity
                 Intent intent = new Intent(getContext(), DetailActivity.class);
                 intent.putExtra("day", clickerId);
                 startActivity(intent);

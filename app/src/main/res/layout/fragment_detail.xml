@@ -1,14 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             tools:context=".fragment.DetailFragment">
+             android:padding="20dp"
+             android:orientation="vertical">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="@string/hello_blank_fragment"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorForecastFont"
+            android:textSize="35sp"
+            android:textStyle="bold"
+            android:text="周二"/>
 
-</FrameLayout>
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/colorForecastFont"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="12月4日"/>
+
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+        <!--温度显示-->
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+            <TextView
+                    android:id="@+id/d_max_t"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorForecastFont"
+                    android:textSize="80sp"
+                    android:textStyle="italic"
+                    android:text=" 27°"/>
+
+            <TextView
+                    android:id="@+id/d_min_t"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorForecastFont"
+                    android:textSize="40sp"
+                    android:textStyle="italic"
+                    android:text="16°"/>
+        </LinearLayout>
+
+        <!--天气显示-->
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+            <ImageView
+                    android:id="@+id/d_wicon"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/i100"/>
+
+            <TextView
+                    android:id="@+id/d_wtext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorForecastFont"
+                    android:textSize="40sp"
+                    android:textStyle="bold"
+                    android:text="晴"/>
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:textColor="@color/colorForecastFont"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="湿度: 37 %"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorForecastFont"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="大气压强: 1018 hPa"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorForecastFont"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="风力: 1-2 级"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorForecastFont"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="风速: 15 km/h"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorForecastFont"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="风向: 西北风"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorForecastFont"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="降水量: 10 mm"/>
+
+    <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorForecastFont"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="降水概率: 10 %"/>
+
+</LinearLayout>
