@@ -5,620 +5,660 @@
         android:layout_height="match_parent"
         android:scrollbars="none">
 
-<LinearLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical">
-
     <LinearLayout
-            android:id="@+id/day0"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5.5"
-            android:paddingTop="20dp"
-            android:paddingLeft="50dp"
-            android:paddingRight="50dp"
-            android:orientation="vertical"
-            android:focusable="true"
-            android:clickable="true">
-        <!--日期显示-->
-        <TextView
-                android:id="@+id/date_t"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:textColor="@color/colorForecastFont"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:text="12月1日星期六"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
         <LinearLayout
+                android:id="@+id/day0"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="5.5"
+                android:paddingTop="20dp"
+                android:paddingLeft="50dp"
+                android:paddingRight="50dp"
+                android:orientation="vertical"
+                android:focusable="true"
+                android:clickable="true">
+            <!--日期显示-->
+            <TextView
+                    android:id="@+id/date_t"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="10dp"
+                    android:textColor="@color/colorForecastFont"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:text="12月1日星期六"/>
+
+            <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
+                <!--温度显示-->
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                    <TextView
+                            android:id="@+id/cur_t"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorForecastFont"
+                            android:textSize="75sp"
+                            android:textStyle="italic"
+                            android:text=" 27°"/>
+
+                    <TextView
+                            android:id="@+id/ran_t"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorForecastFont"
+                            android:textSize="25sp"
+                            android:textStyle="italic"
+                            android:text="19°/16°"/>
+                </LinearLayout>
+
+                <!--天气显示-->
+                <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                    <ImageView
+                            android:id="@+id/w_icon0"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/i100"/>
+
+                    <TextView
+                            android:id="@+id/w_text0"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/colorForecastFont"
+                            android:textSize="30sp"
+                            android:textStyle="bold"
+                            android:text="晴"/>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!--区域显示-->
+            <TextView
+                    android:id="@+id/location"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="15dp"
+                    android:drawableLeft="@drawable/dw_icon"
+                    android:textColor="@color/colorForecastFont"
+                    android:textSize="20sp"
+                    android:text="长沙市"/>
+
+            <TextView
+                    android:id="@+id/update_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="15dp"
+                    android:textColor="@color/colorForecastFont"
+                    android:textSize="12sp"
+                    android:text="   更新时间: 12:00"/>
+        </LinearLayout>
+
+        <View
+                android:layout_height="2dp"
+                android:layout_width="match_parent"
+                android:background="#d9d9d9"
+                />
+
+        <LinearLayout
+                android:id="@+id/day1"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp"
                 android:baselineAligned="false"
-                android:orientation="horizontal">
-            <!--温度显示-->
+                android:orientation="horizontal"
+                android:focusable="true"
+                android:clickable="true">
+            <!--日期显示-->
             <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:gravity="center"
                     android:orientation="vertical">
+
                 <TextView
-                        android:id="@+id/cur_t"
+                        android:id="@+id/md1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
                         android:textColor="@color/colorForecastFont"
-                        android:textSize="75sp"
-                        android:textStyle="italic"
-                        android:text=" 27°"/>
+                        android:text="11月30日"/>
+
                 <TextView
-                        android:id="@+id/ran_t"
+                        android:id="@+id/week1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="13sp"
                         android:textColor="@color/colorForecastFont"
-                        android:textSize="25sp"
-                        android:textStyle="italic"
-                        android:text="19°/16°"/>
+                        android:text="星期五"/>
             </LinearLayout>
 
             <!--天气显示-->
             <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="center"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
+
                 <ImageView
-                        android:id="@+id/w_icon0"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/i100"/>
+                        android:id="@+id/w_icon1"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/i213"/>
+
                 <TextView
-                        android:id="@+id/w_text0"
+                        android:id="@+id/w_text1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:textColor="@color/colorForecastFont"
-                        android:textSize="30sp"
-                        android:textStyle="bold"
-                        android:text="晴"/>
+                        android:text="热带风暴"/>
+            </LinearLayout>
+
+            <!--温度显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/max_t1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="27°"/>
+
+                <TextView
+                        android:id="@+id/min_t1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="16°"/>
             </LinearLayout>
         </LinearLayout>
 
-        <!--区域显示-->
-        <TextView
-                android:id="@+id/location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="15dp"
-                android:drawableLeft="@drawable/dw_icon"
-                android:textColor="@color/colorForecastFont"
-                android:textSize="20sp"
-                android:text="长沙市"/>
+        <View
+                android:layout_height="0.5dp"
+                android:layout_width="match_parent"
+                android:background="#d9d9d9"
+                />
 
-        <TextView
-                android:id="@+id/update_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="15dp"
-                android:textColor="@color/colorForecastFont"
-                android:textSize="12sp"
-                android:text="   更新时间: 12:00"/>
+        <LinearLayout
+                android:id="@+id/day2"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:orientation="horizontal"
+                android:focusable="true"
+                android:clickable="true">
+            <!--日期显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/md2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="11月30日"/>
+
+                <TextView
+                        android:id="@+id/week2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="13sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="星期五"/>
+            </LinearLayout>
+
+            <!--天气显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:id="@+id/w_icon2"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/i213"/>
+
+                <TextView
+                        android:id="@+id/w_text2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="热带风暴"/>
+            </LinearLayout>
+
+            <!--温度显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/max_t2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="27°"/>
+
+                <TextView
+                        android:id="@+id/min_t2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="16°"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+                android:layout_height="0.5dp"
+                android:layout_width="match_parent"
+                android:background="#d9d9d9"
+                />
+
+        <LinearLayout
+                android:id="@+id/day3"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:orientation="horizontal"
+                android:focusable="true"
+                android:clickable="true">
+            <!--日期显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/md3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="11月30日"/>
+
+                <TextView
+                        android:id="@+id/week3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="13sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="星期五"/>
+            </LinearLayout>
+
+            <!--天气显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:id="@+id/w_icon3"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/i213"/>
+
+                <TextView
+                        android:id="@+id/w_text3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="热带风暴"/>
+            </LinearLayout>
+
+            <!--温度显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/max_t3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="27°"/>
+
+                <TextView
+                        android:id="@+id/min_t3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="16°"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+                android:layout_height="0.5dp"
+                android:layout_width="match_parent"
+                android:background="#d9d9d9"
+                />
+
+        <LinearLayout
+                android:id="@+id/day4"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:orientation="horizontal"
+                android:focusable="true"
+                android:clickable="true">
+            <!--日期显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/md4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="11月30日"/>
+
+                <TextView
+                        android:id="@+id/week4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="13sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="星期五"/>
+            </LinearLayout>
+
+            <!--天气显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:id="@+id/w_icon4"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/i213"/>
+
+                <TextView
+                        android:id="@+id/w_text4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="热带风暴"/>
+            </LinearLayout>
+
+            <!--温度显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/max_t4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="27°"/>
+
+                <TextView
+                        android:id="@+id/min_t4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="16°"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+                android:layout_height="0.5dp"
+                android:layout_width="match_parent"
+                android:background="#d9d9d9"
+                />
+
+        <LinearLayout
+                android:id="@+id/day5"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:orientation="horizontal"
+                android:focusable="true"
+                android:clickable="true">
+            <!--日期显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/md5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="11月30日"/>
+
+                <TextView
+                        android:id="@+id/week5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="13sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="星期五"/>
+            </LinearLayout>
+
+            <!--天气显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:id="@+id/w_icon5"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/i213"/>
+
+                <TextView
+                        android:id="@+id/w_text5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="热带风暴"/>
+            </LinearLayout>
+
+            <!--温度显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/max_t5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="27°"/>
+
+                <TextView
+                        android:id="@+id/min_t5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="16°"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View
+                android:layout_height="0.5dp"
+                android:layout_width="match_parent"
+                android:background="#d9d9d9"
+                />
+
+        <LinearLayout
+                android:id="@+id/day6"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:padding="5dp"
+                android:orientation="horizontal"
+                android:focusable="true"
+                android:clickable="true">
+            <!--日期显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/md6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="15sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="12月3日"/>
+
+                <TextView
+                        android:id="@+id/week6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="13sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="星期五"/>
+            </LinearLayout>
+
+            <!--天气显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                <ImageView
+                        android:id="@+id/w_icon6"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:src="@drawable/i213"/>
+
+                <TextView
+                        android:id="@+id/w_text6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="热带风暴"/>
+            </LinearLayout>
+
+            <!--温度显示-->
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                <TextView
+                        android:id="@+id/max_t6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="18sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="27°"/>
+
+                <TextView
+                        android:id="@+id/min_t6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorForecastFont"
+                        android:text="16°"/>
+            </LinearLayout>
+        </LinearLayout>
+
     </LinearLayout>
-
-    <View
-            android:layout_height="2dp"
-            android:layout_width="match_parent"
-            android:background="#d9d9d9"
-            />
-
-    <LinearLayout
-            android:id="@+id/day1"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:baselineAligned="false"
-            android:orientation="horizontal"
-            android:focusable="true"
-            android:clickable="true">
-        <!--日期显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/md1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="15sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="11月30日"/>
-            <TextView
-                    android:id="@+id/week1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="13sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="星期五"/>
-        </LinearLayout>
-
-        <!--天气显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:orientation="horizontal">
-            <ImageView
-                    android:id="@+id/w_icon1"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/i213"/>
-            <TextView
-                    android:id="@+id/w_text1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="热带风暴"/>
-        </LinearLayout>
-
-        <!--温度显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/max_t1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="27°"/>
-            <TextView
-                    android:id="@+id/min_t1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="16°"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-            android:layout_height="0.5dp"
-            android:layout_width="match_parent"
-            android:background="#d9d9d9"
-            />
-
-    <LinearLayout
-            android:id="@+id/day2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:orientation="horizontal"
-            android:focusable="true"
-            android:clickable="true">
-        <!--日期显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/md2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="15sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="11月30日"/>
-            <TextView
-                    android:id="@+id/week2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="13sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="星期五"/>
-        </LinearLayout>
-
-        <!--天气显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:orientation="horizontal">
-            <ImageView
-                    android:id="@+id/w_icon2"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/i213"/>
-            <TextView
-                    android:id="@+id/w_text2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="热带风暴"/>
-        </LinearLayout>
-
-        <!--温度显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/max_t2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="27°"/>
-            <TextView
-                    android:id="@+id/min_t2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="16°"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-            android:layout_height="0.5dp"
-            android:layout_width="match_parent"
-            android:background="#d9d9d9"
-            />
-
-    <LinearLayout
-            android:id="@+id/day3"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:orientation="horizontal"
-            android:focusable="true"
-            android:clickable="true">
-        <!--日期显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/md3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="15sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="11月30日"/>
-            <TextView
-                    android:id="@+id/week3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="13sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="星期五"/>
-        </LinearLayout>
-
-        <!--天气显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:orientation="horizontal">
-            <ImageView
-                    android:id="@+id/w_icon3"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/i213"/>
-            <TextView
-                    android:id="@+id/w_text3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="热带风暴"/>
-        </LinearLayout>
-
-        <!--温度显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/max_t3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="27°"/>
-            <TextView
-                    android:id="@+id/min_t3"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="16°"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-            android:layout_height="0.5dp"
-            android:layout_width="match_parent"
-            android:background="#d9d9d9"
-            />
-
-    <LinearLayout
-            android:id="@+id/day4"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:orientation="horizontal"
-            android:focusable="true"
-            android:clickable="true">
-        <!--日期显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/md4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="15sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="11月30日"/>
-            <TextView
-                    android:id="@+id/week4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="13sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="星期五"/>
-        </LinearLayout>
-
-        <!--天气显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:orientation="horizontal">
-            <ImageView
-                    android:id="@+id/w_icon4"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/i213"/>
-            <TextView
-                    android:id="@+id/w_text4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="热带风暴"/>
-        </LinearLayout>
-
-        <!--温度显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/max_t4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="27°"/>
-            <TextView
-                    android:id="@+id/min_t4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="16°"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-            android:layout_height="0.5dp"
-            android:layout_width="match_parent"
-            android:background="#d9d9d9"
-            />
-
-    <LinearLayout
-            android:id="@+id/day5"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:orientation="horizontal"
-            android:focusable="true"
-            android:clickable="true">
-        <!--日期显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/md5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="15sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="11月30日"/>
-            <TextView
-                    android:id="@+id/week5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="13sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="星期五"/>
-        </LinearLayout>
-
-        <!--天气显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:orientation="horizontal">
-            <ImageView
-                    android:id="@+id/w_icon5"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/i213"/>
-            <TextView
-                    android:id="@+id/w_text5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="热带风暴"/>
-        </LinearLayout>
-
-        <!--温度显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/max_t5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="27°"/>
-            <TextView
-                    android:id="@+id/min_t5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="16°"/>
-        </LinearLayout>
-    </LinearLayout>
-
-    <View
-            android:layout_height="0.5dp"
-            android:layout_width="match_parent"
-            android:background="#d9d9d9"
-            />
-
-    <LinearLayout
-            android:id="@+id/day6"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:padding="5dp"
-            android:orientation="horizontal"
-            android:focusable="true"
-            android:clickable="true">
-        <!--日期显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/md6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="15sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="12月3日"/>
-            <TextView
-                    android:id="@+id/week6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="13sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="星期五"/>
-        </LinearLayout>
-
-        <!--天气显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="center"
-                android:orientation="horizontal">
-            <ImageView
-                    android:id="@+id/w_icon6"
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:src="@drawable/i213"/>
-            <TextView
-                    android:id="@+id/w_text6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="热带风暴"/>
-        </LinearLayout>
-
-        <!--温度显示-->
-        <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-            <TextView
-                    android:id="@+id/max_t6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="18sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="27°"/>
-            <TextView
-                    android:id="@+id/min_t6"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="12sp"
-                    android:textColor="@color/colorForecastFont"
-                    android:text="16°"/>
-        </LinearLayout>
-    </LinearLayout>
-
-</LinearLayout>
 </ScrollView>

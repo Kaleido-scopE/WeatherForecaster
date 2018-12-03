@@ -1,6 +1,7 @@
 package com.example.noah.weatherforecaster.fragment;
 
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -13,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.noah.weatherforecaster.R;
+import com.example.noah.weatherforecaster.activity.DetailActivity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import com.example.noah.weatherforecaster.utils.RIdManager;
 import com.example.noah.weatherforecaster.utils.TimeUtils;
@@ -75,19 +77,8 @@ public class OverviewFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_overview, container, false);
         initView(v);
         new FetchItemsTask().execute();
+        Log.d("OverviewFragment", "onCreateView");
         return v;
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle saveInstanceState) {
-        super.onSaveInstanceState(saveInstanceState);
-        Log.i("overview", "onSavedInstanceState");
-    }
-
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        Log.d("overview", String.valueOf(hidden));
     }
 
     //-------------------------其他函数-------------------------
@@ -107,12 +98,9 @@ public class OverviewFragment extends Fragment {
                         break;
                     }
 
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                Fragment detailFragment = DetailFragment.newInstance(clickerId);
-                fm.beginTransaction().add(R.id.fragment_container, detailFragment, "DetailFragment")
-                                    .hide(OverviewFragment.this)
-                                    .show(detailFragment)
-                                    .commit();
+                Intent intent = new Intent(getContext(), DetailActivity.class);
+                intent.putExtra("day", clickerId);
+                startActivity(intent);
             }
         };
 

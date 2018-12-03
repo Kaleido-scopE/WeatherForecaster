@@ -3,9 +3,7 @@ package com.example.noah.weatherforecaster.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,38 +17,9 @@ public class DetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_detail, container, false);
-        if (getArguments() != null) {
+        if (getArguments() != null && getArguments().containsKey("day"))
             day = getArguments().getInt("day");
-            Log.d("detail", day + "");
-        }
-
-        v.setFocusable(true);
-        v.requestFocus();
-        v.setFocusableInTouchMode(true);
-        v.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-
-                    return true;
-                }
-                return false;
-            }
-        });
+        Log.d("DetailFragment", day + "");
         return v;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        Log.d("detail", "destroy");
-    }
-
-    public static DetailFragment newInstance(int day) {
-        DetailFragment detailFragment = new DetailFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt("day", day);
-        detailFragment.setArguments(bundle);
-        return detailFragment;
     }
 }
