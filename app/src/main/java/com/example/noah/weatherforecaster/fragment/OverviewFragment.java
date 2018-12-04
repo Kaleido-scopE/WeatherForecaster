@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,9 +18,6 @@ import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import com.example.noah.weatherforecaster.utils.RIdManager;
 import com.example.noah.weatherforecaster.utils.TimeUtils;
 import com.example.noah.weatherforecaster.utils.WeatherInfoFetcher;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class OverviewFragment extends Fragment {
     private TextView dateToday; //今天的日期
@@ -38,18 +34,16 @@ public class OverviewFragment extends Fragment {
     private LinearLayout[] dayLayout; //各日期的主体Layout，用于点击进入详细信息视图
     private View.OnClickListener layoutClickListener; //Layout的点击监听器，用于启动详细视图Fragment
 
+    private WeatherEntity today; //当前天气
+    private WeatherEntity[] forecast; //预报信息
 
     //-------------------------异步请求类-------------------------
-    private class FetchItemsTask extends AsyncTask<Void, Void, Map<String, Object>> {
+    private class FetchItemsTask extends AsyncTask<Void, Void, Void> {
         @Override
-        protected Map<String, Object> doInBackground(Void... params) {
+        protected Void doInBackground(Void... params) {
             try {
-                Map<String, Object> map = new HashMap<>();
-                WeatherEntity today = WeatherInfoFetcher.getToday("changsha");
-                WeatherEntity[] forecast = WeatherInfoFetcher.getForecast("changsha");
-                map.put("today", today);
-                map.put("forecast", forecast);
-                return map;
+                today = WeatherInfoFetcher.getToday("changsha");
+                forecast = WeatherInfoFetcher.getForecast("changsha");
             } catch (Exception e) {
                 Log.e("OF", "Exception");
                 e.printStackTrace();
@@ -58,15 +52,9 @@ public class OverviewFragment extends Fragment {
         }
 
         @Override
-        protected void onPostExecute(Map<String, Object> map) {
-            super.onPostExecute(map);
-            WeatherEntity today = new WeatherEntity();
-            WeatherEntity[] forecast = new WeatherEntity[7];
-            if (map.containsKey("today"))
-                today = (WeatherEntity) map.get("today");
-            if (map.containsKey("forecast"))
-                forecast = (WeatherEntity[]) map.get("forecast");
-            updateWeatherInfo(today, forecast);
+        protected void onPostExecute(Void param) {
+            super.onPostExecute(param);
+            updateWeatherInfo();
         }
     }
 
@@ -77,7 +65,6 @@ public class OverviewFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_overview, container, false);
         initView(v);
         new FetchItemsTask().execute();
-        Log.d("OverviewFragment", "onCreateView");
         return v;
     }
 
@@ -100,7 +87,7 @@ public class OverviewFragment extends Fragment {
 
                 //带参数启动承载详细视图的Activity
                 Intent intent = new Intent(getContext(), DetailActivity.class);
-                intent.putExtra("day", clickerId);
+                intent.putExtra("detail", forecast[clickerId]);
                 startActivity(intent);
             }
         };
@@ -134,10 +121,8 @@ public class OverviewFragment extends Fragment {
 
     /**
      * 刷新天气信息
-     * @param today 当前天气
-     * @param forecast 预报天气数组
      */
-    private void updateWeatherInfo(WeatherEntity today, WeatherEntity[] forecast) {
+    private void updateWeatherInfo() {
         //设置今日日期
         String dateTodayStr = TimeUtils.mdFromDate(forecast[0].getDate()) + TimeUtils.weekFromDate(forecast[0].getDate());
         dateToday.setText(dateTodayStr);

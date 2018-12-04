@@ -93,6 +93,13 @@ public class WeatherInfoFetcher {
                 forecastInfo[i].setWeatherName(dailyForecast.getJSONObject(i).getString("cond_txt_d"));
                 forecastInfo[i].setMinDegree(dailyForecast.getJSONObject(i).getInt("tmp_min"));
                 forecastInfo[i].setMaxDegree(dailyForecast.getJSONObject(i).getInt("tmp_max"));
+                forecastInfo[i].setHumidity(dailyForecast.getJSONObject(i).getInt("hum"));
+                forecastInfo[i].setAtmoPressure(dailyForecast.getJSONObject(i).getInt("pres"));
+                forecastInfo[i].setWindSpeed(dailyForecast.getJSONObject(i).getInt("wind_spd"));
+                forecastInfo[i].setWindScale(dailyForecast.getJSONObject(i).getString("wind_sc"));
+                forecastInfo[i].setWindDir(dailyForecast.getJSONObject(i).getString("wind_dir"));
+                forecastInfo[i].setPrecipitation(dailyForecast.getJSONObject(i).getInt("pcpn"));
+                forecastInfo[i].setPrecipRate(dailyForecast.getJSONObject(i).getInt("pop"));
                 forecastInfo[i].setDate(TimeUtils.dateFromDateStr(dailyForecast.getJSONObject(i).getString("date")));
             }
 

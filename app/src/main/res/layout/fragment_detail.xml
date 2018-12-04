@@ -6,6 +6,7 @@
              android:orientation="vertical">
 
     <TextView
+            android:id="@+id/d_week"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
@@ -15,6 +16,7 @@
             android:text="周二"/>
 
     <TextView
+            android:id="@+id/d_md"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
@@ -82,6 +84,7 @@
     </LinearLayout>
 
     <TextView
+            android:id="@+id/d_hum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
@@ -92,6 +95,7 @@
             android:text="湿度: 37 %"/>
 
     <TextView
+            android:id="@+id/d_pres"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
@@ -101,15 +105,7 @@
             android:text="大气压强: 1018 hPa"/>
 
     <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:textColor="@color/colorForecastFont"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:text="风力: 1-2 级"/>
-
-    <TextView
+            android:id="@+id/d_wind_spd"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
@@ -119,6 +115,17 @@
             android:text="风速: 15 km/h"/>
 
     <TextView
+            android:id="@+id/d_wind_sc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:textColor="@color/colorForecastFont"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:text="风力: 1-2 级"/>
+
+    <TextView
+            android:id="@+id/d_wind_dir"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
@@ -128,6 +135,7 @@
             android:text="风向: 西北风"/>
 
     <TextView
+            android:id="@+id/d_pcpn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"
@@ -137,6 +145,7 @@
             android:text="降水量: 10 mm"/>
 
     <TextView
+            android:id="@+id/d_pop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="10dp"

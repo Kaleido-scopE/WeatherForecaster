@@ -1,18 +1,23 @@
 package com.example.noah.weatherforecaster.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class WeatherEntity {
+public class WeatherEntity implements Serializable {
     private String location; //所在位置
     private int weatherCode; //天气代码
     private String weatherName; //天气名称
     private int minDegree; //最低温度
     private int maxDegree; //最高温度
     private int currentDegree; //当前温度
+    private int humidity; //湿度
+    private int atmoPressure; //大气压强
+    private int windSpeed; //风速
+    private String windScale; //风力等级
+    private String windDir; //风向
+    private int precipitation; //降水量
+    private int precipRate; //降水概率
     private Date date; //对应日期
-
-    public WeatherEntity() {
-    }
 
     public String getLocation() {
         return location;
@@ -60,6 +65,62 @@ public class WeatherEntity {
 
     public void setCurrentDegree(int currentDegree) {
         this.currentDegree = currentDegree;
+    }
+
+    public int getHumidity() {
+        return humidity;
+    }
+
+    public void setHumidity(int humidity) {
+        this.humidity = humidity;
+    }
+
+    public int getAtmoPressure() {
+        return atmoPressure;
+    }
+
+    public void setAtmoPressure(int atmoPressure) {
+        this.atmoPressure = atmoPressure;
+    }
+
+    public int getWindSpeed() {
+        return windSpeed;
+    }
+
+    public void setWindSpeed(int windSpeed) {
+        this.windSpeed = windSpeed;
+    }
+
+    public String getWindScale() {
+        return windScale;
+    }
+
+    public void setWindScale(String windScale) {
+        this.windScale = windScale;
+    }
+
+    public String getWindDir() {
+        return windDir;
+    }
+
+    public void setWindDir(String windDir) {
+        this.windDir = windDir;
+    }
+
+    public int getPrecipitation() {
+        return precipitation;
+    }
+
+    public void setPrecipitation(int precipitation) {
+        this.precipitation = precipitation;
+    }
+
+    public int getPrecipRate() {
+        return precipRate;
+    }
+
+    public void setPrecipRate(int precipRate) {
+        this.precipRate = precipRate;
     }
 
     public Date getDate() {
