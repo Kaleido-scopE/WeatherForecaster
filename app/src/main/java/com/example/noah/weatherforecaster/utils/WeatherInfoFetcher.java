@@ -1,6 +1,7 @@
 package com.example.noah.weatherforecaster.utils;
 
 import android.net.Uri;
+import com.example.noah.weatherforecaster.entity.CityEntity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -10,6 +11,8 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 public class WeatherInfoFetcher {
     private static final String key = "e2ac4a73247349b1956710b971f98c16";
@@ -106,6 +109,42 @@ public class WeatherInfoFetcher {
             return forecastInfo;
         } catch (Exception e) {
             return forecastInfo;
+        }
+    }
+
+    /**
+     * 获取热门城市列表
+     * @param number 列表长度，可选1-50
+     * @param group 区域，可选国内(cn)、海外(overseas)、全球(world)
+     * @return 城市实体列表
+     */
+    public static List<CityEntity> getCityList(int number, String group) {
+        String endPoint = "https://free-api.heweather.com/s6/weather/top";
+        String url = Uri.parse(endPoint).buildUpon()
+                .appendQueryParameter("number", String.valueOf(number))
+                .appendQueryParameter("group", group)
+                .appendQueryParameter("key", key)
+                .build().toString();
+
+        List<CityEntity> cities = new ArrayList<>();
+
+        try {
+            CityEntity entity;
+            String res = getResponseStr(url);
+            JSONObject innerJSONObject = new JSONObject(res).getJSONArray("HeWeather6").getJSONObject(0);
+            JSONArray basic = innerJSONObject.getJSONArray("basic");
+
+            for (int i = 0; i < basic.length(); i++) {
+                entity = new CityEntity();
+                entity.setLocation(basic.getJSONObject(i).getString("location"));
+                entity.setLatitude(basic.getJSONObject(i).getDouble("lat"));
+                entity.setLongitude(basic.getJSONObject(i).getDouble("lon"));
+                cities.add(entity);
+            }
+
+            return cities;
+        } catch (Exception e) {
+            return cities;
         }
     }
 }

@@ -6,6 +6,7 @@ import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import com.example.noah.weatherforecaster.fragment.DetailFragment;
 
 public class DetailActivity extends SingleFragmentActivity {
+    public static final int activityReqCode = 2;
 
     @Override
     protected Fragment createFragment() {

@@ -7,12 +7,12 @@ import java.util.Date;
 import java.util.Locale;
 
 public class TimeUtils {
-    private static DateFormat DATE = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    private static DateFormat DATE_MIN = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
-    private static DateFormat WEEK = new SimpleDateFormat("E", Locale.getDefault());
-    private static DateFormat MONTH = new SimpleDateFormat("MM月", Locale.getDefault());
-    private static DateFormat DAY = new SimpleDateFormat("dd日", Locale.getDefault());
-    private static DateFormat HM = new SimpleDateFormat("HH:mm", Locale.getDefault());
+    private static DateFormat DATE = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
+    private static DateFormat DATE_MIN = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);
+    private static DateFormat WEEK = new SimpleDateFormat("E", Locale.CHINA);
+    private static DateFormat MONTH = new SimpleDateFormat("MM月", Locale.CHINA);
+    private static DateFormat DAY = new SimpleDateFormat("dd日", Locale.CHINA);
+    private static DateFormat HM = new SimpleDateFormat("HH:mm", Locale.CHINA);
 
     public static Date dateFromDateStr(String dateStr) throws ParseException {
         return DATE.parse(dateStr);

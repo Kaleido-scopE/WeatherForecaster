@@ -6,14 +6,13 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.noah.weatherforecaster.R;
 import com.example.noah.weatherforecaster.activity.DetailActivity;
+import com.example.noah.weatherforecaster.activity.SettingActivity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import com.example.noah.weatherforecaster.utils.RIdManager;
 import com.example.noah.weatherforecaster.utils.TimeUtils;
@@ -60,6 +59,12 @@ public class OverviewFragment extends Fragment {
 
     //-------------------------生命周期函数-------------------------
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_overview, container, false);
@@ -68,6 +73,37 @@ public class OverviewFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_overview, menu);
+
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.map_location:
+                Log.d("OverviewFragment", "map location");
+                return true;
+            case R.id.settings:
+                Intent intent = new Intent(getContext(), SettingActivity.class);
+                startActivityForResult(intent, SettingActivity.activityReqCode);
+                Log.d("OverviewFragment", "settings");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SettingActivity.activityReqCode) {
+            Log.d("Overview loc", data.getStringExtra("curLocation"));
+            Log.d("Overview unit", data.getStringExtra("unit"));
+            Log.d("Overview ntf", data.getBooleanExtra("notification", true) + "");
+        }
+    }
     //-------------------------其他函数-------------------------
 
     /**
