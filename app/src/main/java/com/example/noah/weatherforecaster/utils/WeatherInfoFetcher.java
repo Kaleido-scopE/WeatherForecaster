@@ -1,6 +1,7 @@
 package com.example.noah.weatherforecaster.utils;
 
 import android.net.Uri;
+import android.util.Log;
 import com.example.noah.weatherforecaster.entity.CityEntity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import org.json.JSONArray;
@@ -119,7 +120,7 @@ public class WeatherInfoFetcher {
      * @return 城市实体列表
      */
     public static List<CityEntity> getCityList(int number, String group) {
-        String endPoint = "https://free-api.heweather.com/s6/weather/top";
+        String endPoint = "https://search.heweather.com/top";
         String url = Uri.parse(endPoint).buildUpon()
                 .appendQueryParameter("number", String.valueOf(number))
                 .appendQueryParameter("group", group)

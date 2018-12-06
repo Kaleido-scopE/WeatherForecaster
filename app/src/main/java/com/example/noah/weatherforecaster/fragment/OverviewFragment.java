@@ -44,7 +44,6 @@ public class OverviewFragment extends Fragment {
                 today = WeatherInfoFetcher.getToday("changsha");
                 forecast = WeatherInfoFetcher.getForecast("changsha");
             } catch (Exception e) {
-                Log.e("OF", "Exception");
                 e.printStackTrace();
             }
             return null;

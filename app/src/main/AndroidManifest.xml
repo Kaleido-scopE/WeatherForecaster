@@ -20,9 +20,14 @@
         </activity>
         <activity android:name=".activity.DetailActivity">
         </activity>
-        <activity android:name=".activity.SettingActivity"
+        <activity
+                android:name=".activity.SettingActivity"
                 android:label="@string/settings"
                 android:parentActivityName=".activity.OverviewActivity">
+        </activity>
+        <activity
+                android:name=".activity.CityActivity"
+                android:label="@string/select_city">
         </activity>
     </application>
 

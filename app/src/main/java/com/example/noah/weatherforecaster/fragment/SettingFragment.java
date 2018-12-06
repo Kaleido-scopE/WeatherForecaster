@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.example.noah.weatherforecaster.R;
+import com.example.noah.weatherforecaster.activity.CityActivity;
 
 public class SettingFragment extends Fragment {
     private LinearLayout curLocation; //当前位置
@@ -38,6 +39,17 @@ public class SettingFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CityActivity.activityReqCode) {
+            String location = data.getStringExtra("location");
+            Log.d("SettingFragment", location);
+            curLocationText.setText(location);
+            resultIntent.putExtra("curLocation", location);
+            getActivity().setResult(0, resultIntent);
+        }
+    }
+
     /**
      * 初始化私有成员
      * @param v 当前fragment的View对象
@@ -54,7 +66,8 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 resultIntent.putExtra("curLocation", curLocationText.getText());
-                getActivity().setResult(0, resultIntent);
+                Intent intent = new Intent(getContext(), CityActivity.class);
+                startActivityForResult(intent, CityActivity.activityReqCode);
             }
         });
 

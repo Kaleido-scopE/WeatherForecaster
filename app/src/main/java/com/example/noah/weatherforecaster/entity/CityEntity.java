@@ -5,6 +5,14 @@ public class CityEntity {
     private double latitude; //纬度
     private double longitude; //经度
 
+    public CityEntity() {}
+
+    public CityEntity(String location, double latitude, double longitude) {
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
+    }
+
     public String getLocation() {
         return location;
     }

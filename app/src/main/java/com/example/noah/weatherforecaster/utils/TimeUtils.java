@@ -39,6 +39,8 @@ public class TimeUtils {
     }
 
     public static void main(String[] args) throws ParseException {
-        System.out.println(hmFromDate(new Date()));
+        double d = 113.115;
+        String str = String.format(Locale.getDefault(), "%.2f", d);
+        System.out.println(str);
     }
 }
