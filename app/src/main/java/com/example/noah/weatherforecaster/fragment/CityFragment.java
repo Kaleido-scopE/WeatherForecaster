@@ -95,7 +95,7 @@ public class CityFragment extends Fragment {
         @Override
         protected Void doInBackground(Void... voids) {
             try {
-                cities = WeatherInfoFetcher.getCityList(50, "overseas");
+                cities = WeatherInfoFetcher.getCityList(50, "cn");
             } catch (Exception e) {
                 e.printStackTrace();
             }

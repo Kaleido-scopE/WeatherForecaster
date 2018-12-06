@@ -10,7 +10,19 @@ public class SettingActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        return new SettingFragment();
+        String setLocation = "";
+        String setUnit = "";
+
+        if (getIntent() != null) {
+            setLocation = getIntent().getStringExtra("setLocation");
+            setUnit = getIntent().getStringExtra("setUnit");
+        }
+        SettingFragment settingFragment = new SettingFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("setLocation", setLocation);
+        bundle.putString("setUnit", setUnit);
+        settingFragment.setArguments(bundle);
+        return settingFragment;
     }
 
 }

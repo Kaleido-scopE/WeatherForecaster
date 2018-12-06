@@ -14,7 +14,7 @@
                 android:id="@+id/day0"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="5.5"
+                android:layout_weight="6"
                 android:paddingTop="20dp"
                 android:paddingLeft="50dp"
                 android:paddingRight="50dp"
@@ -97,10 +97,11 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginTop="15dp"
+                    android:gravity="center"
                     android:drawableLeft="@drawable/dw_icon"
                     android:textColor="@color/colorForecastFont"
                     android:textSize="20sp"
-                    android:text="长沙市"/>
+                    android:text="长沙"/>
 
             <TextView
                     android:id="@+id/update_time"

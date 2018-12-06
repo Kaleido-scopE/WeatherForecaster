@@ -7,10 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.*;
 import com.example.noah.weatherforecaster.R;
 import com.example.noah.weatherforecaster.activity.CityActivity;
 
@@ -22,6 +19,9 @@ public class SettingFragment extends Fragment {
     private TextView notificationState; //通知状态文本
     private CheckBox notificationBox; //通知勾选框
 
+    private String setLocation; //当前设置的位置
+    private String setTempUnit; //当前设置的温度单位
+
     private Intent resultIntent = new Intent();
 
     @Override
@@ -30,9 +30,17 @@ public class SettingFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_setting, container, false);
         initView(v);
 
+        if (getArguments() != null) {
+            setLocation = getArguments().getString("setLocation");
+            setTempUnit = getArguments().getString("setUnit");
+        }
+
+        curLocationText.setText(setLocation);
+        tempUnitText.setText(setTempUnit);
+
         //设置默认resultIntent
-        resultIntent.putExtra("curLocation", "Changsha");
-        resultIntent.putExtra("unit", "摄氏");
+        resultIntent.putExtra("curLocation", setLocation);
+        resultIntent.putExtra("unit", setTempUnit);
         resultIntent.putExtra("notification", false);
         getActivity().setResult(0, resultIntent);
 

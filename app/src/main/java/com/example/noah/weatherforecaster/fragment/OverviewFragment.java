@@ -10,6 +10,7 @@ import android.view.*;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.example.noah.weatherforecaster.R;
 import com.example.noah.weatherforecaster.activity.DetailActivity;
 import com.example.noah.weatherforecaster.activity.SettingActivity;
@@ -35,23 +36,30 @@ public class OverviewFragment extends Fragment {
 
     private WeatherEntity today; //当前天气
     private WeatherEntity[] forecast; //预报信息
+    private char curTempUnit; //当前温度单位，默认为摄氏
 
     //-------------------------异步请求类-------------------------
-    private class FetchItemsTask extends AsyncTask<Void, Void, Void> {
+    private class FetchItemsTask extends AsyncTask<String, Void, String> {
         @Override
-        protected Void doInBackground(Void... params) {
+        protected String doInBackground(String... params) {//params变长；参数1必选，表示请求位置；参数2可选，表示目标温度单位
+            String type = "摄氏";
             try {
-                today = WeatherInfoFetcher.getToday("changsha");
-                forecast = WeatherInfoFetcher.getForecast("changsha");
+                today = WeatherInfoFetcher.getToday(params[0]);
+                forecast = WeatherInfoFetcher.getForecast(params[0]);
+                curTempUnit = 'C';
+                if (params.length > 1)
+                    type = params[1];
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return null;
+            return type;
         }
 
         @Override
-        protected void onPostExecute(Void param) {
+        protected void onPostExecute(String param) {
             super.onPostExecute(param);
+            char inputType = param.equals("摄氏") ? 'C' : 'F';
+            updateTempVal(inputType);
             updateWeatherInfo();
         }
     }
@@ -68,7 +76,7 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_overview, container, false);
         initView(v);
-        new FetchItemsTask().execute();
+        new FetchItemsTask().execute("changsha");
         return v;
     }
 
@@ -87,8 +95,9 @@ public class OverviewFragment extends Fragment {
                 return true;
             case R.id.settings:
                 Intent intent = new Intent(getContext(), SettingActivity.class);
+                intent.putExtra("setLocation", today.getLocation());
+                intent.putExtra("setUnit", curTempUnit == 'C' ? "摄氏" : "华氏");
                 startActivityForResult(intent, SettingActivity.activityReqCode);
-                Log.d("OverviewFragment", "settings");
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -98,9 +107,19 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SettingActivity.activityReqCode) {
-            Log.d("Overview loc", data.getStringExtra("curLocation"));
-            Log.d("Overview unit", data.getStringExtra("unit"));
-            Log.d("Overview ntf", data.getBooleanExtra("notification", true) + "");
+            Log.d("OverviewFragment", data.getBooleanExtra("notification", true) + "");
+
+            String curLocation  = data.getStringExtra("curLocation");
+            String unit = data.getStringExtra("unit");
+
+            if (!curLocation.equals(today.getLocation())) {//当设置的位置变化时，需要重新发送网络请求
+                new FetchItemsTask().execute(curLocation, unit);
+            }
+            else {
+                char inputType = unit.equals("摄氏") ? 'C' : 'F';
+                updateTempVal(inputType);
+                updateWeatherInfo();
+            }
         }
     }
     //-------------------------其他函数-------------------------
@@ -190,6 +209,36 @@ public class OverviewFragment extends Fragment {
             }
             weatherIcon[i].setImageResource(RIdManager.getRes("drawable", "i" + forecast[i].getWeatherCode()));
             weatherText[i].setText(forecast[i].getWeatherName());
+        }
+    }
+
+    /**
+     * 温度单位转换
+     * @param toType 目标类型 (C/F)
+     * @param value 原始温度
+     * @return 转化结果
+     */
+    private int transformTemperature(char toType, int value) {
+        int res = 0;
+        if (toType == 'C')
+            res = Double.valueOf((value - 32) / 1.8).intValue();
+        if (toType == 'F')
+            res = Double.valueOf(value * 1.8 + 32).intValue();
+        return res;
+    }
+
+    /**
+     * 更新温度单位
+     * @param toType 目标类型 (C/F)
+     */
+    private void updateTempVal(char toType) {
+        if (toType == curTempUnit)
+            return;
+        curTempUnit = toType;
+        today.setCurrentDegree(transformTemperature(toType, today.getCurrentDegree()));
+        for (int i = 0; i < 7; i++) {
+            forecast[i].setMaxDegree(transformTemperature(toType, forecast[i].getMaxDegree()));
+            forecast[i].setMinDegree(transformTemperature(toType, forecast[i].getMinDegree()));
         }
     }
 }
