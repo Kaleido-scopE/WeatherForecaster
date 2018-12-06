@@ -84,7 +84,6 @@ public class OverviewFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_overview, menu);
-
     }
 
     @Override
@@ -122,6 +121,7 @@ public class OverviewFragment extends Fragment {
             }
         }
     }
+
     //-------------------------其他函数-------------------------
 
     /**

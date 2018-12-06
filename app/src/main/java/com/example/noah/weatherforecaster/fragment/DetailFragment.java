@@ -1,12 +1,11 @@
 package com.example.noah.weatherforecaster.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.noah.weatherforecaster.R;
@@ -32,6 +31,13 @@ public class DetailFragment extends Fragment {
 
     private WeatherEntity detail; //承载详情的entity
 
+    //-------------------------生命周期函数-------------------------
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,6 +50,31 @@ public class DetailFragment extends Fragment {
         updateDetail();
         return v;
     }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.fragment_detail, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.share:
+                createShareList();
+                return true;
+            case R.id.map_location:
+
+                return true;
+            case R.id.settings:
+
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //-------------------------其他函数-------------------------
 
     /**
      * 初始化私有成员
@@ -103,5 +134,46 @@ public class DetailFragment extends Fragment {
         weatherText.setText(detail.getWeatherName());
 
         weatherIcon.setImageResource(RIdManager.getRes("drawable", "i" + detail.getWeatherCode()));
+    }
+
+    /**
+     * 拼接整个UI上的信息
+     * @return 拼接好的字符串
+     */
+    private String contacUIText() {
+        StringBuilder builder = new StringBuilder();
+
+        //拼接日期
+        builder.append("日期：").append(date.getText()).append(week.getText()).append('\n');
+
+        //拼接温度
+        builder.append("温度：").append(maxTemp.getText().toString().substring(1)).append('/').append(minTemp.getText().toString().substring(1)).append('\n');
+
+        //拼接天气
+        builder.append("天气：").append(weatherText.getText()).append('\n');
+
+        //拼接其他信息
+        builder.append(humidity.getText()).append('\n')
+                .append(atomPressure.getText()).append('\n')
+                .append(windSpeed.getText()).append('\n')
+                .append(windScale.getText()).append('\n')
+                .append(windDir.getText()).append('\n')
+                .append(precipitation.getText()).append('\n')
+                .append(precipRate.getText()).append('\n');
+
+        return builder.toString();
+    }
+
+    /**
+     * 利用隐式Intent启动分享应用选择列表
+     */
+    private void createShareList() {
+        String title = detail.getLocation() + " " + date.getText().toString() + "的天气";
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, title);
+        intent.putExtra(Intent.EXTRA_TEXT, contacUIText());
+        intent = Intent.createChooser(intent, "发送天气");
+        startActivity(intent);
     }
 }
