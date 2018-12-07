@@ -1,10 +1,22 @@
 package com.example.noah.weatherforecaster.fragment;
 
 
+import android.Manifest;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.*;
 import android.widget.ImageView;
@@ -37,6 +49,8 @@ public class OverviewFragment extends Fragment {
     private WeatherEntity today; //当前天气
     private WeatherEntity[] forecast; //预报信息
     private char curTempUnit; //当前温度单位，默认为摄氏
+
+    private Location curLocation; //当前位置
 
     //-------------------------异步请求类-------------------------
     private class FetchItemsTask extends AsyncTask<String, Void, String> {
@@ -76,7 +90,7 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_overview, container, false);
         initView(v);
-        new FetchItemsTask().execute("changsha");
+        getLocation();
         return v;
     }
 
@@ -91,6 +105,7 @@ public class OverviewFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.map_location:
                 Log.d("OverviewFragment", "map location");
+                launchMapApp();
                 return true;
             case R.id.settings:
                 Intent intent = new Intent(getContext(), SettingActivity.class);
@@ -241,5 +256,54 @@ public class OverviewFragment extends Fragment {
             forecast[i].setMaxDegree(transformTemperature(toType, forecast[i].getMaxDegree()));
             forecast[i].setMinDegree(transformTemperature(toType, forecast[i].getMinDegree()));
         }
+    }
+
+    private void getLocation() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+
+        final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+
+        curLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        //Network Listener
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 8, new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                curLocation = location;
+                Log.i("getLocation", "Changed");
+                new FetchItemsTask().execute(curLocation.getLongitude() + "," + curLocation.getLatitude());
+                locationManager.removeUpdates(this);
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        });
+    }
+
+    private void launchMapApp() {
+        String uri = "androidamap://viewMap?sourceApplication=appname&poiname=abc&lat=" + curLocation.getLatitude()
+                + "&lon=" + curLocation.getLongitude() + "&dev=1";
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        intent.setPackage("com.autonavi.minimap");
+        intent.setData(Uri.parse(uri));
+        Log.i("launchMapApp", "start");
+        startActivity(intent);
     }
 }
