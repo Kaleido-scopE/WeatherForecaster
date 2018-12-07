@@ -9,6 +9,7 @@ import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.noah.weatherforecaster.R;
+import com.example.noah.weatherforecaster.activity.SettingActivity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import com.example.noah.weatherforecaster.utils.RIdManager;
 import com.example.noah.weatherforecaster.utils.TimeUtils;
@@ -30,6 +31,10 @@ public class DetailFragment extends Fragment {
     private ImageView weatherIcon; //天气图标
 
     private WeatherEntity detail; //承载详情的entity
+    private String curLocation; //当前位置
+    private String tempUnit; //温度单位
+
+    private Intent resultIntent = new Intent(); //承载返回结果的Intent
 
     //-------------------------生命周期函数-------------------------
     @Override
@@ -44,8 +49,16 @@ public class DetailFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_detail, container, false);
         initView(v);
 
-        if (getArguments() != null)
+        if (getArguments() != null) {
             detail = (WeatherEntity) getArguments().get("detail");
+            curLocation = detail.getLocation();
+            tempUnit = getArguments().getString("unit");
+        }
+
+        resultIntent.putExtra("curLocation", curLocation);
+        resultIntent.putExtra("unit", tempUnit);
+        resultIntent.putExtra("notification", true);
+        getActivity().setResult(0, resultIntent);
 
         updateDetail();
         return v;
@@ -63,14 +76,28 @@ public class DetailFragment extends Fragment {
             case R.id.share:
                 createShareList();
                 return true;
-            case R.id.map_location:
-
-                return true;
             case R.id.settings:
-
+                Intent intent = new Intent(getContext(), SettingActivity.class);
+                intent.putExtra("setLocation", curLocation);
+                intent.putExtra("setUnit", tempUnit);
+                startActivityForResult(intent, SettingActivity.activityReqCode);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SettingActivity.activityReqCode) {
+            curLocation = data.getStringExtra("curLocation");
+            tempUnit = data.getStringExtra("unit");
+
+            resultIntent.putExtra("curLocation", curLocation);
+            resultIntent.putExtra("unit", tempUnit);
+            resultIntent.putExtra("notification", data.getBooleanExtra("notification", true));
+            getActivity().setResult(0, resultIntent);
+            getActivity().finish();
         }
     }
 

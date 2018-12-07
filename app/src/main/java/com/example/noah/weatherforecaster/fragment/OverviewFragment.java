@@ -105,7 +105,7 @@ public class OverviewFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SettingActivity.activityReqCode) {
+        if (requestCode == SettingActivity.activityReqCode || requestCode == DetailActivity.activityReqCode) {
             Log.d("OverviewFragment", data.getBooleanExtra("notification", true) + "");
 
             String curLocation  = data.getStringExtra("curLocation");
@@ -142,7 +142,8 @@ public class OverviewFragment extends Fragment {
                 //带参数启动承载详细视图的Activity
                 Intent intent = new Intent(getContext(), DetailActivity.class);
                 intent.putExtra("detail", forecast[clickerId]);
-                startActivity(intent);
+                intent.putExtra("unit", curTempUnit == 'C' ? "摄氏" : "华氏");
+                startActivityForResult(intent, DetailActivity.activityReqCode);
             }
         };
 

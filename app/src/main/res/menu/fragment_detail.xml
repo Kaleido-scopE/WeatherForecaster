@@ -8,10 +8,6 @@
           app:showAsAction="ifRoom">
     </item>
 
-    <item android:id="@+id/map_location"
-          android:title="@string/map_location">
-    </item>
-
     <item android:id="@+id/settings"
           android:title="@string/settings">
     </item>

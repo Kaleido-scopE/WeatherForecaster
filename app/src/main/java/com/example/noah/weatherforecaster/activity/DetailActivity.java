@@ -11,11 +11,15 @@ public class DetailActivity extends SingleFragmentActivity {
     @Override
     protected Fragment createFragment() {
         WeatherEntity detail = null;
-        if (getIntent() != null)
+        String tempUnit = "摄氏";
+        if (getIntent() != null) {
             detail = (WeatherEntity) getIntent().getSerializableExtra("detail");
+            tempUnit = getIntent().getStringExtra("unit");
+        }
         DetailFragment detailFragment = new DetailFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("detail", detail);
+        bundle.putString("unit", tempUnit);
         detailFragment.setArguments(bundle);
         return detailFragment;
     }
