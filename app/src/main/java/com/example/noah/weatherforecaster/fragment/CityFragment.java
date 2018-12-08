@@ -45,7 +45,10 @@ public class CityFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     String location = cityName.getText().toString();
-                    resultIntent.putExtra("location", location);
+                    double lat = Double.valueOf(latitude.getText().toString().substring(5));
+                    double lon = Double.valueOf(longitude.getText().toString().substring(5));
+
+                    resultIntent.putExtra("location", new CityEntity(location, lat, lon));
                     getActivity().setResult(0, resultIntent);
                     getActivity().finish();
                 }
@@ -53,8 +56,8 @@ public class CityFragment extends Fragment {
         }
 
         public void bind(CityEntity city) {
-            String latitudeStr = "lat: " + String.format(Locale.US, "%.2f", city.getLatitude());
-            String longitudeStr = "lon: " + String.format(Locale.US, "%.2f", city.getLongitude());
+            String latitudeStr = "lat: " + String.format(Locale.US, "%.3f", city.getLatitude());
+            String longitudeStr = "lon: " + String.format(Locale.US, "%.3f", city.getLongitude());
             cityName.setText(city.getLocation());
             latitude.setText(latitudeStr);
             longitude.setText(longitudeStr);
@@ -116,7 +119,11 @@ public class CityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_city, container, false);
 
-        resultIntent.putExtra("location", "北京");
+        CityEntity cityEntity = null;
+        if (getArguments() != null)
+            cityEntity = (CityEntity) getArguments().getSerializable("originLocation");
+
+        resultIntent.putExtra("location", cityEntity);
         getActivity().setResult(0, resultIntent);
 
         new FetchCityItemsTask().execute();

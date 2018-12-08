@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.*;
 import com.example.noah.weatherforecaster.R;
 import com.example.noah.weatherforecaster.activity.CityActivity;
+import com.example.noah.weatherforecaster.entity.CityEntity;
 
 public class SettingFragment extends Fragment {
     private LinearLayout curLocation; //当前位置
@@ -19,7 +20,7 @@ public class SettingFragment extends Fragment {
     private TextView notificationState; //通知状态文本
     private CheckBox notificationBox; //通知勾选框
 
-    private String setLocation; //当前设置的位置
+    private CityEntity setLocation; //当前设置的位置
     private String setTempUnit; //当前设置的温度单位
 
     private Intent resultIntent = new Intent();
@@ -31,17 +32,17 @@ public class SettingFragment extends Fragment {
         initView(v);
 
         if (getArguments() != null) {
-            setLocation = getArguments().getString("setLocation");
+            setLocation = (CityEntity) getArguments().getSerializable("setLocation");
             setTempUnit = getArguments().getString("setUnit");
         }
 
-        curLocationText.setText(setLocation);
+        curLocationText.setText(setLocation.getLocation());
         tempUnitText.setText(setTempUnit);
 
         //设置默认resultIntent
         resultIntent.putExtra("curLocation", setLocation);
         resultIntent.putExtra("unit", setTempUnit);
-        resultIntent.putExtra("notification", false);
+        resultIntent.putExtra("notification", true);
         getActivity().setResult(0, resultIntent);
 
         return v;
@@ -50,10 +51,10 @@ public class SettingFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CityActivity.activityReqCode) {
-            String location = data.getStringExtra("location");
-            Log.d("SettingFragment", location);
-            curLocationText.setText(location);
-            resultIntent.putExtra("curLocation", location);
+            CityEntity cityEntity = (CityEntity) data.getSerializableExtra("location");
+            curLocationText.setText(cityEntity.getLocation());
+
+            resultIntent.putExtra("curLocation", cityEntity);
             getActivity().setResult(0, resultIntent);
         }
     }
@@ -73,8 +74,8 @@ public class SettingFragment extends Fragment {
         curLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                resultIntent.putExtra("curLocation", curLocationText.getText());
                 Intent intent = new Intent(getContext(), CityActivity.class);
+                intent.putExtra("curLocation", setLocation);
                 startActivityForResult(intent, CityActivity.activityReqCode);
             }
         });

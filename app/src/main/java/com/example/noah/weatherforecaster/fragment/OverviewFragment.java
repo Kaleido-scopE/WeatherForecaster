@@ -3,7 +3,6 @@ package com.example.noah.weatherforecaster.fragment;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -12,11 +11,8 @@ import android.location.LocationManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.*;
 import android.widget.ImageView;
@@ -26,6 +22,7 @@ import android.widget.Toast;
 import com.example.noah.weatherforecaster.R;
 import com.example.noah.weatherforecaster.activity.DetailActivity;
 import com.example.noah.weatherforecaster.activity.SettingActivity;
+import com.example.noah.weatherforecaster.entity.CityEntity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import com.example.noah.weatherforecaster.utils.RIdManager;
 import com.example.noah.weatherforecaster.utils.TimeUtils;
@@ -50,7 +47,7 @@ public class OverviewFragment extends Fragment {
     private WeatherEntity[] forecast; //预报信息
     private char curTempUnit; //当前温度单位，默认为摄氏
 
-    private Location curLocation; //当前位置
+    private Location curLocationObj; //当前位置
 
     //-------------------------异步请求类-------------------------
     private class FetchItemsTask extends AsyncTask<String, Void, String> {
@@ -90,6 +87,7 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_overview, container, false);
         initView(v);
+        requestLocatingPrivilege();
         getLocation();
         return v;
     }
@@ -109,7 +107,7 @@ public class OverviewFragment extends Fragment {
                 return true;
             case R.id.settings:
                 Intent intent = new Intent(getContext(), SettingActivity.class);
-                intent.putExtra("setLocation", today.getLocation());
+                intent.putExtra("setLocation", new CityEntity(today.getLocation(), today.getLatitude(), today.getLongitude()));
                 intent.putExtra("setUnit", curTempUnit == 'C' ? "摄氏" : "华氏");
                 startActivityForResult(intent, SettingActivity.activityReqCode);
                 return true;
@@ -123,16 +121,31 @@ public class OverviewFragment extends Fragment {
         if (requestCode == SettingActivity.activityReqCode || requestCode == DetailActivity.activityReqCode) {
             Log.d("OverviewFragment", data.getBooleanExtra("notification", true) + "");
 
-            String curLocation  = data.getStringExtra("curLocation");
+            CityEntity curLocation  = (CityEntity) data.getSerializableExtra("curLocation");
             String unit = data.getStringExtra("unit");
 
-            if (!curLocation.equals(today.getLocation())) {//当设置的位置变化时，需要重新发送网络请求
-                new FetchItemsTask().execute(curLocation, unit);
+            if (!curLocation.getLocation().equals(today.getLocation())) {//当设置的位置变化时，需要重新发送网络请求
+                curLocationObj.setLatitude(curLocation.getLatitude());
+                curLocationObj.setLongitude(curLocation.getLongitude());
+                new FetchItemsTask().execute(curLocation.getLocation(), unit);
             }
             else {
                 char inputType = unit.equals("摄氏") ? 'C' : 'F';
                 updateTempVal(inputType);
                 updateWeatherInfo();
+            }
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        if (requestCode == 111) {
+            //处理位置信息授权结果
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                getLocation();
+            else {
+                Toast.makeText(getContext(), "权限不足，无法拉取天气信息，请打开位置权限后再试", Toast.LENGTH_LONG).show();
+                getActivity().finish();
             }
         }
     }
@@ -258,6 +271,21 @@ public class OverviewFragment extends Fragment {
         }
     }
 
+    /**
+     * 请求定位权限
+     */
+    private void requestLocatingPrivilege() {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(
+                    new String[] {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    111);
+        }
+    }
+
+    /**
+     * 获取当前位置，更新curLocation
+     */
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -265,29 +293,25 @@ public class OverviewFragment extends Fragment {
         }
 
         final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-
-        curLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+        curLocationObj = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
         //Network Listener
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 8, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                curLocation = location;
+                curLocationObj = location;
                 Log.i("getLocation", "Changed");
-                new FetchItemsTask().execute(curLocation.getLongitude() + "," + curLocation.getLatitude());
+                new FetchItemsTask().execute(curLocationObj.getLongitude() + "," + curLocationObj.getLatitude());
                 locationManager.removeUpdates(this);
             }
-
             @Override
             public void onStatusChanged(String provider, int status, Bundle extras) {
 
             }
-
             @Override
             public void onProviderEnabled(String provider) {
 
             }
-
             @Override
             public void onProviderDisabled(String provider) {
 
@@ -295,9 +319,15 @@ public class OverviewFragment extends Fragment {
         });
     }
 
+    /**
+     * 使用隐式Intent启动高德地图
+     */
     private void launchMapApp() {
-        String uri = "androidamap://viewMap?sourceApplication=appname&poiname=abc&lat=" + curLocation.getLatitude()
-                + "&lon=" + curLocation.getLongitude() + "&dev=1";
+        String uri = "androidamap://viewMap?sourceApplication=appname"
+                + "&poiname=" + today.getLocation()
+                + "&lat=" + curLocationObj.getLatitude()
+                + "&lon=" + curLocationObj.getLongitude()
+                + "&dev=1";
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_DEFAULT);

@@ -1,6 +1,8 @@
 package com.example.noah.weatherforecaster.entity;
 
-public class CityEntity {
+import java.io.Serializable;
+
+public class CityEntity implements Serializable {
     private String location; //所在位置
     private double latitude; //纬度
     private double longitude; //经度

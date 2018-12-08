@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.noah.weatherforecaster.R;
 import com.example.noah.weatherforecaster.activity.SettingActivity;
+import com.example.noah.weatherforecaster.entity.CityEntity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import com.example.noah.weatherforecaster.utils.RIdManager;
 import com.example.noah.weatherforecaster.utils.TimeUtils;
@@ -31,8 +32,9 @@ public class DetailFragment extends Fragment {
     private ImageView weatherIcon; //天气图标
 
     private WeatherEntity detail; //承载详情的entity
-    private String curLocation; //当前位置
     private String tempUnit; //温度单位
+
+    private CityEntity curLocation; //当前位置，用于返回给OverviewActivity
 
     private Intent resultIntent = new Intent(); //承载返回结果的Intent
 
@@ -51,8 +53,9 @@ public class DetailFragment extends Fragment {
 
         if (getArguments() != null) {
             detail = (WeatherEntity) getArguments().get("detail");
-            curLocation = detail.getLocation();
             tempUnit = getArguments().getString("unit");
+
+            curLocation = new CityEntity(detail.getLocation(), detail.getLatitude(), detail.getLongitude());
         }
 
         resultIntent.putExtra("curLocation", curLocation);
@@ -90,7 +93,7 @@ public class DetailFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SettingActivity.activityReqCode) {
-            curLocation = data.getStringExtra("curLocation");
+            curLocation = (CityEntity) data.getSerializableExtra("curLocation");
             tempUnit = data.getStringExtra("unit");
 
             resultIntent.putExtra("curLocation", curLocation);
@@ -170,6 +173,9 @@ public class DetailFragment extends Fragment {
     private String contacUIText() {
         StringBuilder builder = new StringBuilder();
 
+        //拼接地点
+        builder.append("地区：").append(detail.getLocation()).append('\n');
+
         //拼接日期
         builder.append("日期：").append(date.getText()).append(week.getText()).append('\n');
 
@@ -186,7 +192,7 @@ public class DetailFragment extends Fragment {
                 .append(windScale.getText()).append('\n')
                 .append(windDir.getText()).append('\n')
                 .append(precipitation.getText()).append('\n')
-                .append(precipRate.getText()).append('\n');
+                .append(precipRate.getText());
 
         return builder.toString();
     }

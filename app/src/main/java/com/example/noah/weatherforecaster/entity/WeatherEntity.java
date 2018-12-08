@@ -5,6 +5,8 @@ import java.util.Date;
 
 public class WeatherEntity implements Serializable {
     private String location; //所在位置
+    private double latitude; //所在纬度
+    private double longitude; //所在经度
     private int weatherCode; //天气代码
     private String weatherName; //天气名称
     private int minDegree; //最低温度
@@ -25,6 +27,22 @@ public class WeatherEntity implements Serializable {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
     public int getWeatherCode() {

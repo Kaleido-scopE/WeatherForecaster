@@ -2,7 +2,7 @@ package com.example.noah.weatherforecaster.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
+import com.example.noah.weatherforecaster.entity.CityEntity;
 import com.example.noah.weatherforecaster.fragment.SettingFragment;
 
 public class SettingActivity extends SingleFragmentActivity {
@@ -10,16 +10,17 @@ public class SettingActivity extends SingleFragmentActivity {
 
     @Override
     protected Fragment createFragment() {
-        String setLocation = "";
+        CityEntity setLocation = null;
         String setUnit = "";
 
         if (getIntent() != null) {
-            setLocation = getIntent().getStringExtra("setLocation");
+            setLocation = (CityEntity) getIntent().getSerializableExtra("setLocation");
             setUnit = getIntent().getStringExtra("setUnit");
         }
+
         SettingFragment settingFragment = new SettingFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("setLocation", setLocation);
+        bundle.putSerializable("setLocation", setLocation);
         bundle.putString("setUnit", setUnit);
         settingFragment.setArguments(bundle);
         return settingFragment;

@@ -93,6 +93,8 @@ public class WeatherInfoFetcher {
             for (int i = 0; i < 7; i++) {
                 forecastInfo[i] = new WeatherEntity();
                 forecastInfo[i].setLocation(basic.getString("location"));
+                forecastInfo[i].setLatitude(basic.getDouble("lat"));
+                forecastInfo[i].setLongitude(basic.getDouble("lon"));
                 forecastInfo[i].setWeatherCode(dailyForecast.getJSONObject(i).getInt("cond_code_d"));
                 forecastInfo[i].setWeatherName(dailyForecast.getJSONObject(i).getString("cond_txt_d"));
                 forecastInfo[i].setMinDegree(dailyForecast.getJSONObject(i).getInt("tmp_min"));
