@@ -24,6 +24,7 @@ import com.example.noah.weatherforecaster.activity.DetailActivity;
 import com.example.noah.weatherforecaster.activity.SettingActivity;
 import com.example.noah.weatherforecaster.entity.CityEntity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
+import com.example.noah.weatherforecaster.service.NotificationService;
 import com.example.noah.weatherforecaster.utils.RIdManager;
 import com.example.noah.weatherforecaster.utils.TimeUtils;
 import com.example.noah.weatherforecaster.utils.WeatherInfoFetcher;
@@ -41,7 +42,6 @@ public class OverviewFragment extends Fragment {
     private TextView[] weatherText; //天气描述数组
     private ImageView[] weatherIcon; //天气图标数组
     private LinearLayout[] dayLayout; //各日期的主体Layout，用于点击进入详细信息视图
-    private View.OnClickListener layoutClickListener; //Layout的点击监听器，用于启动详细视图Fragment
 
     private WeatherEntity today; //当前天气
     private WeatherEntity[] forecast; //预报信息
@@ -88,6 +88,7 @@ public class OverviewFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_overview, container, false);
         initView(v);
         requestLocatingPrivilege();
+        new FetchItemsTask().execute("changsha");
         getLocation();
         return v;
     }
@@ -119,7 +120,10 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SettingActivity.activityReqCode || requestCode == DetailActivity.activityReqCode) {
-            Log.d("OverviewFragment", data.getBooleanExtra("notification", true) + "");
+            boolean isNotificationOn = data.getBooleanExtra("notification", true);
+            Intent contentIntent = new Intent();
+            contentIntent.putExtra("text", createNotificationStr());
+            NotificationService.setServiceAlarm(getActivity(), isNotificationOn, contentIntent);
 
             CityEntity curLocation  = (CityEntity) data.getSerializableExtra("curLocation");
             String unit = data.getStringExtra("unit");
@@ -157,7 +161,7 @@ public class OverviewFragment extends Fragment {
      * @param v 当前fragment的View对象
      */
     private void initView(View v) {
-        layoutClickListener = new View.OnClickListener() {
+        View.OnClickListener layoutClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 int clickerId = 0;
@@ -173,7 +177,7 @@ public class OverviewFragment extends Fragment {
                 intent.putExtra("unit", curTempUnit == 'C' ? "摄氏" : "华氏");
                 startActivityForResult(intent, DetailActivity.activityReqCode);
             }
-        };
+        };//Layout的点击监听器，用于启动详细视图Fragment
 
         dateNext = new TextView[7];
         weekNext = new TextView[7];
@@ -335,5 +339,9 @@ public class OverviewFragment extends Fragment {
         intent.setData(Uri.parse(uri));
         Log.i("launchMapApp", "start");
         startActivity(intent);
+    }
+
+    private String createNotificationStr() {
+        return forecast[0].getLocation()  + ": " + forecast[0].getWeatherName() + "    " + forecast[0].getMaxDegree() + "°/" + forecast[0].getMinDegree() + "°";
     }
 }

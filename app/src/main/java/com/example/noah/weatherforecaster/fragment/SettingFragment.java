@@ -99,10 +99,12 @@ public class SettingFragment extends Fragment {
         notificationBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked)
+                if (isChecked) {
                     notificationState.setText("启用");
-                else
+                }
+                else {
                     notificationState.setText("关闭");
+                }
                 resultIntent.putExtra("notification", isChecked);
                 getActivity().setResult(0, resultIntent);
             }
