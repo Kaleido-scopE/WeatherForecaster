@@ -53,6 +53,11 @@ public class SettingFragment extends Fragment {
         return v;
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CityActivity.activityReqCode)
+            curLocationText.setText(SettingUtils.getSetLocation().getLocation());
+    }
     //-------------------------其他函数-------------------------
 
     /**
@@ -71,7 +76,7 @@ public class SettingFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), CityActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, CityActivity.activityReqCode);
             }
         });
 

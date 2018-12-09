@@ -6,6 +6,7 @@ public class SettingUtils {
     private static CityEntity setLocation = new CityEntity();
     private static String setTempUnit = "摄氏";
     private static Boolean setNotificationState = true;
+    private static Boolean isTwoPane = false;
 
     public static CityEntity getSetLocation() {
         return setLocation;
@@ -29,6 +30,14 @@ public class SettingUtils {
 
     public static void setSetNotificationState(Boolean setNotificationState) {
         SettingUtils.setNotificationState = setNotificationState;
+    }
+
+    public static Boolean getIsTwoPane() {
+        return isTwoPane;
+    }
+
+    public static void setIsTwoPane(Boolean isTwoPane) {
+        SettingUtils.isTwoPane = isTwoPane;
     }
 
     /**

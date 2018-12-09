@@ -11,6 +11,7 @@ import com.example.noah.weatherforecaster.R;
 import com.example.noah.weatherforecaster.activity.SettingActivity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import com.example.noah.weatherforecaster.utils.RIdManager;
+import com.example.noah.weatherforecaster.utils.SettingUtils;
 import com.example.noah.weatherforecaster.utils.TimeUtils;
 
 
@@ -35,7 +36,7 @@ public class DetailFragment extends Fragment {
     public static DetailFragment newInstance(WeatherEntity weatherEntity) {
         DetailFragment detailFragment = new DetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("detail", weatherEntity);
+        bundle.putSerializable("Detail", weatherEntity);
         detailFragment.setArguments(bundle);
         return detailFragment;
     }
@@ -54,7 +55,7 @@ public class DetailFragment extends Fragment {
         initView(v);
 
         if (getArguments() != null)
-            detail = (WeatherEntity) getArguments().get("detail");
+            detail = (WeatherEntity) getArguments().get("Detail");
 
         updateDetail();
         return v;
@@ -64,6 +65,8 @@ public class DetailFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_detail, menu);
+        if (SettingUtils.getIsTwoPane()) //若是平板视图，则隐藏设置菜单
+            menu.findItem(R.id.settings).setVisible(false);
     }
 
     @Override

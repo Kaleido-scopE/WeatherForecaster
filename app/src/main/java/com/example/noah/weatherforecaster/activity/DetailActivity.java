@@ -12,7 +12,7 @@ public class DetailActivity extends SingleFragmentActivity {
         WeatherEntity detail = null;
 
         if (getIntent() != null)
-            detail = (WeatherEntity) getIntent().getSerializableExtra("detail");
+            detail = (WeatherEntity) getIntent().getSerializableExtra("Detail");
 
         return DetailFragment.newInstance(detail);
     }

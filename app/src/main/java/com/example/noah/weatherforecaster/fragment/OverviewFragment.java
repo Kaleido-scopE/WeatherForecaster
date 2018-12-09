@@ -100,6 +100,12 @@ public class OverviewFragment extends Fragment {
     }
 
     @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        SettingUtils.setIsTwoPane(getActivity().findViewById(R.id.detail_container) != null);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         saveState();
@@ -109,6 +115,7 @@ public class OverviewFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_overview, menu);
+
     }
 
     @Override
@@ -130,6 +137,13 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SettingActivity.activityReqCode || requestCode == DetailActivity.activityReqCode) {
+            //如果是平板视图，返回后清空detail_container
+            if (SettingUtils.getIsTwoPane()) {
+                Fragment fragment = getFragmentManager().findFragmentById(R.id.detail_container);
+                if (fragment != null)
+                    getFragmentManager().beginTransaction().hide(fragment).commit();
+            }
+
             //当设置的位置变化时，需要重新发送网络请求
             if (!SettingUtils.getSetLocation().getLocation().equals(today.getLocation()))
                 new FetchItemsTask().execute(SettingUtils.getSetLocation().getLocation(), SettingUtils.getSetTempUnit());
@@ -170,10 +184,15 @@ public class OverviewFragment extends Fragment {
                         break;
                     }
 
-                //带参数启动承载详细视图的Activity
-                Intent intent = new Intent(getContext(), DetailActivity.class);
-                intent.putExtra("detail", forecast[clickerId]);
-                startActivityForResult(intent, DetailActivity.activityReqCode);
+                if (SettingUtils.getIsTwoPane()) {//如果是平板视图，则替换detail_container里的Fragment
+                    DetailFragment detailFragment = DetailFragment.newInstance(forecast[clickerId]);
+                    getFragmentManager().beginTransaction().replace(R.id.detail_container, detailFragment).commit();
+                }
+                else {//否则带参数启动承载详细视图的Activity
+                    Intent intent = new Intent(getContext(), DetailActivity.class);
+                    intent.putExtra("Detail", forecast[clickerId]);
+                    startActivityForResult(intent, DetailActivity.activityReqCode);
+                }
             }
         };//Layout的点击监听器，用于启动详细视图Fragment
 
