@@ -39,8 +39,10 @@ public class TimeUtils {
     }
 
     public static void main(String[] args) throws ParseException {
-        double d = 113.115;
-        String str = String.format(Locale.getDefault(), "%.2f", d);
-        System.out.println(str);
+        Date date1 = new Date();
+        Long dateL = date1.getTime();
+        Date date2 = new Date(dateL);
+        System.out.println(date1);
+        System.out.println(date2);
     }
 }

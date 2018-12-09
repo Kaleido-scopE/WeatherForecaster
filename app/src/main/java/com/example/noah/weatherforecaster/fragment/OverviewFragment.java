@@ -4,6 +4,7 @@ package com.example.noah.weatherforecaster.fragment;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -29,6 +30,8 @@ import com.example.noah.weatherforecaster.utils.RIdManager;
 import com.example.noah.weatherforecaster.utils.TimeUtils;
 import com.example.noah.weatherforecaster.utils.WeatherInfoFetcher;
 
+import java.util.Date;
+
 public class OverviewFragment extends Fragment {
     private TextView dateToday; //今天的日期
     private TextView curTemToday; //当前温度
@@ -45,9 +48,8 @@ public class OverviewFragment extends Fragment {
 
     private WeatherEntity today; //当前天气
     private WeatherEntity[] forecast; //预报信息
-    private char curTempUnit; //当前温度单位，默认为摄氏
-
-    private Location curLocationObj; //当前位置
+    private String curTempUnit; //当前温度单位，默认为摄氏
+    private boolean notificationState; //通知是否开启
 
     //-------------------------异步请求类-------------------------
     private class FetchItemsTask extends AsyncTask<String, Void, String> {
@@ -57,7 +59,7 @@ public class OverviewFragment extends Fragment {
             try {
                 today = WeatherInfoFetcher.getToday(params[0]);
                 forecast = WeatherInfoFetcher.getForecast(params[0]);
-                curTempUnit = 'C';
+                curTempUnit = "摄氏";
                 if (params.length > 1)
                     type = params[1];
             } catch (Exception e) {
@@ -69,8 +71,7 @@ public class OverviewFragment extends Fragment {
         @Override
         protected void onPostExecute(String param) {
             super.onPostExecute(param);
-            char inputType = param.equals("摄氏") ? 'C' : 'F';
-            updateTempVal(inputType);
+            updateTempVal(param);
             updateWeatherInfo();
         }
     }
@@ -103,13 +104,12 @@ public class OverviewFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.map_location:
-                Log.d("OverviewFragment", "map location");
                 launchMapApp();
                 return true;
             case R.id.settings:
                 Intent intent = new Intent(getContext(), SettingActivity.class);
                 intent.putExtra("setLocation", new CityEntity(today.getLocation(), today.getLatitude(), today.getLongitude()));
-                intent.putExtra("setUnit", curTempUnit == 'C' ? "摄氏" : "华氏");
+                intent.putExtra("setUnit", curTempUnit);
                 startActivityForResult(intent, SettingActivity.activityReqCode);
                 return true;
             default:
@@ -120,22 +120,21 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SettingActivity.activityReqCode || requestCode == DetailActivity.activityReqCode) {
-            boolean isNotificationOn = data.getBooleanExtra("notification", true);
+            notificationState = data.getBooleanExtra("notification", true);
             Intent contentIntent = new Intent();
             contentIntent.putExtra("text", createNotificationStr());
-            NotificationService.setServiceAlarm(getActivity(), isNotificationOn, contentIntent);
+            NotificationService.setServiceAlarm(getActivity(), notificationState, contentIntent);
 
             CityEntity curLocation  = (CityEntity) data.getSerializableExtra("curLocation");
             String unit = data.getStringExtra("unit");
 
             if (!curLocation.getLocation().equals(today.getLocation())) {//当设置的位置变化时，需要重新发送网络请求
-                curLocationObj.setLatitude(curLocation.getLatitude());
-                curLocationObj.setLongitude(curLocation.getLongitude());
+                today.setLatitude(curLocation.getLatitude());
+                today.setLongitude(curLocation.getLongitude());
                 new FetchItemsTask().execute(curLocation.getLocation(), unit);
             }
             else {
-                char inputType = unit.equals("摄氏") ? 'C' : 'F';
-                updateTempVal(inputType);
+                updateTempVal(unit);
                 updateWeatherInfo();
             }
         }
@@ -174,7 +173,7 @@ public class OverviewFragment extends Fragment {
                 //带参数启动承载详细视图的Activity
                 Intent intent = new Intent(getContext(), DetailActivity.class);
                 intent.putExtra("detail", forecast[clickerId]);
-                intent.putExtra("unit", curTempUnit == 'C' ? "摄氏" : "华氏");
+                intent.putExtra("unit", curTempUnit);
                 startActivityForResult(intent, DetailActivity.activityReqCode);
             }
         };//Layout的点击监听器，用于启动详细视图Fragment
@@ -229,43 +228,43 @@ public class OverviewFragment extends Fragment {
         String rangeTemTodayStr = forecast[0].getMaxDegree() + "°/" + forecast[0].getMinDegree() + "°";
         rangeTemToday.setText(rangeTemTodayStr);
 
-        //批量设置天气图标、天气描述、预报信息等
+        //设置实时天气图标、天气描述
+        weatherIcon[0].setImageResource(RIdManager.getRes("drawable", "i" + today.getWeatherCode()));
+        weatherText[0].setText(today.getWeatherName());
+
+        //设置预报信息
         String minTem, maxTem;
-        for (int i = 0; i < 7; i++) {
-            if (i != 0) {
-                minTem = forecast[i].getMinDegree() + "°";
-                maxTem = forecast[i].getMaxDegree() + "°";
-                dateNext[i].setText(TimeUtils.mdFromDate(forecast[i].getDate()));
-                weekNext[i].setText(TimeUtils.weekFromDate(forecast[i].getDate()));
-                minTemNext[i].setText(minTem);
-                maxTemNext[i].setText(maxTem);
-            }
-            weatherIcon[i].setImageResource(RIdManager.getRes("drawable", "i" + forecast[i].getWeatherCode()));
-            weatherText[i].setText(forecast[i].getWeatherName());
+        for (int i = 1; i < 7; i++) {
+            minTem = forecast[i].getMinDegree() + "°";
+            maxTem = forecast[i].getMaxDegree() + "°";
+            dateNext[i].setText(TimeUtils.mdFromDate(forecast[i].getDate()));
+            weekNext[i].setText(TimeUtils.weekFromDate(forecast[i].getDate()));
+            minTemNext[i].setText(minTem);
+            maxTemNext[i].setText(maxTem);
         }
     }
 
     /**
      * 温度单位转换
-     * @param toType 目标类型 (C/F)
+     * @param toType 目标类型 ("摄氏"/"华氏")
      * @param value 原始温度
      * @return 转化结果
      */
-    private int transformTemperature(char toType, int value) {
+    private int transformTemperature(String toType, int value) {
         int res = 0;
-        if (toType == 'C')
+        if (toType.equals("摄氏"))
             res = Double.valueOf((value - 32) / 1.8).intValue();
-        if (toType == 'F')
+        if (toType.equals("华氏"))
             res = Double.valueOf(value * 1.8 + 32).intValue();
         return res;
     }
 
     /**
      * 更新温度单位
-     * @param toType 目标类型 (C/F)
+     * @param toType 目标类型 ("摄氏"/"华氏")
      */
-    private void updateTempVal(char toType) {
-        if (toType == curTempUnit)
+    private void updateTempVal(String toType) {
+        if (toType.equals(curTempUnit))
             return;
         curTempUnit = toType;
         today.setCurrentDegree(transformTemperature(toType, today.getCurrentDegree()));
@@ -288,7 +287,7 @@ public class OverviewFragment extends Fragment {
     }
 
     /**
-     * 获取当前位置，更新curLocation
+     * 获取当前位置，更新today中的经纬度
      */
     private void getLocation() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
@@ -297,15 +296,13 @@ public class OverviewFragment extends Fragment {
         }
 
         final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        curLocationObj = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
         //Network Listener
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 8, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                curLocationObj = location;
                 Log.i("getLocation", "Changed");
-                new FetchItemsTask().execute(curLocationObj.getLongitude() + "," + curLocationObj.getLatitude());
+                new FetchItemsTask().execute(location.getLongitude() + "," + location.getLatitude());
                 locationManager.removeUpdates(this);
             }
             @Override
@@ -329,8 +326,8 @@ public class OverviewFragment extends Fragment {
     private void launchMapApp() {
         String uri = "androidamap://viewMap?sourceApplication=appname"
                 + "&poiname=" + today.getLocation()
-                + "&lat=" + curLocationObj.getLatitude()
-                + "&lon=" + curLocationObj.getLongitude()
+                + "&lat=" + today.getLatitude()
+                + "&lon=" + today.getLongitude()
                 + "&dev=1";
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
@@ -341,7 +338,53 @@ public class OverviewFragment extends Fragment {
         startActivity(intent);
     }
 
+    /**
+     * 创建通知消息字符串
+     * @return 拼接后的消息字符串
+     */
     private String createNotificationStr() {
         return forecast[0].getLocation()  + ": " + forecast[0].getWeatherName() + "    " + forecast[0].getMaxDegree() + "°/" + forecast[0].getMinDegree() + "°";
+    }
+
+    /**
+     * 启动应用时，调用该方法，从SharedPreferences中取得应用的部分状态
+     */
+    private void loadState() {
+        SharedPreferences pref = getActivity().getSharedPreferences("state_data", Context.MODE_PRIVATE);
+
+        //加载设置信息
+        curTempUnit = pref.getString("curTempUnit", "摄氏");//缺省值为摄氏
+        notificationState = pref.getBoolean("notificationState", true);//缺省值为真
+
+        //加载当前天气信息
+        today = new WeatherEntity();
+        today.setLocation(pref.getString("location", "北京"));
+        today.setLatitude(Double.valueOf(pref.getString("latitude", "39.90498734")));
+        today.setLongitude(Double.valueOf(pref.getString("longitude", "116.40528870")));
+        today.setWeatherCode(pref.getInt("weatherCode", 101));
+        today.setWeatherName(pref.getString("weatherName", "多云"));
+        today.setCurrentDegree(pref.getInt("currentDegree", 14));
+        today.setDate(new Date(pref.getLong("updateTime", System.currentTimeMillis())));
+    }
+
+    /**
+     * 关闭应用时，调用该方法，利用SharedPreferences保存当前应用的一些状态
+     */
+    private void saveState() {
+        SharedPreferences.Editor editor = getActivity().getSharedPreferences("state_data", Context.MODE_PRIVATE).edit();
+
+        //保存设置状态
+        editor.putBoolean("notificationState", notificationState);
+        editor.putString("curTempUnit", curTempUnit);
+
+        //保存today对象中的信息
+        editor.putString("location", today.getLocation());
+        editor.putString("latitude", String.valueOf(today.getLatitude()));
+        editor.putString("longitude", String.valueOf(today.getLongitude()));
+        editor.putInt("weatherCode", today.getWeatherCode());
+        editor.putString("weatherName", today.getWeatherName());
+        editor.putInt("currentDegree", today.getCurrentDegree());
+        editor.putLong("updateTime", today.getDate().getTime());
+        editor.apply();
     }
 }

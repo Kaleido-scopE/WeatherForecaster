@@ -59,6 +59,8 @@ public class WeatherInfoFetcher {
 
             WeatherEntity entity = new WeatherEntity();
             entity.setLocation(basic.getString("location"));
+            entity.setLatitude(basic.getDouble("lat"));
+            entity.setLongitude(basic.getDouble("lon"));
             entity.setWeatherCode(now.getInt("cond_code"));
             entity.setWeatherName(now.getString("cond_txt"));
             entity.setCurrentDegree(now.getInt("tmp"));
