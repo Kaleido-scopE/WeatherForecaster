@@ -22,6 +22,7 @@ public class SettingFragment extends Fragment {
 
     private CityEntity setLocation; //当前设置的位置
     private String setTempUnit; //当前设置的温度单位
+    private boolean setNotification; //当前设置的通知状态
 
     private Intent resultIntent = new Intent();
 
@@ -34,15 +35,21 @@ public class SettingFragment extends Fragment {
         if (getArguments() != null) {
             setLocation = (CityEntity) getArguments().getSerializable("setLocation");
             setTempUnit = getArguments().getString("setUnit");
+            setNotification = getArguments().getBoolean("setNotification");
         }
 
         curLocationText.setText(setLocation.getLocation());
         tempUnitText.setText(setTempUnit);
+        notificationBox.setChecked(setNotification);
+        if (setNotification)
+            notificationState.setText("启用");
+        else
+            notificationState.setText("关闭");
 
         //设置默认resultIntent
         resultIntent.putExtra("curLocation", setLocation);
         resultIntent.putExtra("unit", setTempUnit);
-        resultIntent.putExtra("notification", true);
+        resultIntent.putExtra("notification", setNotification);
         getActivity().setResult(0, resultIntent);
 
         return v;
@@ -99,13 +106,13 @@ public class SettingFragment extends Fragment {
         notificationBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+                setNotification = isChecked;
+                if (isChecked)
                     notificationState.setText("启用");
-                }
-                else {
+                else
                     notificationState.setText("关闭");
-                }
-                resultIntent.putExtra("notification", isChecked);
+
+                resultIntent.putExtra("notification", setNotification);
                 getActivity().setResult(0, resultIntent);
             }
         });

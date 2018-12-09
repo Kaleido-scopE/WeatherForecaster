@@ -92,7 +92,6 @@ public class OverviewFragment extends Fragment {
         loadState();
         updateWeatherInfo();
         requestLocatingPrivilege();
-        //new FetchItemsTask().execute("changsha");
         updateLocationInfo();
         return v;
     }
@@ -119,6 +118,7 @@ public class OverviewFragment extends Fragment {
                 Intent intent = new Intent(getContext(), SettingActivity.class);
                 intent.putExtra("setLocation", new CityEntity(today.getLocation(), today.getLatitude(), today.getLongitude()));
                 intent.putExtra("setUnit", curTempUnit);
+                intent.putExtra("setNotification", notificationState);
                 startActivityForResult(intent, SettingActivity.activityReqCode);
                 return true;
             default:
@@ -183,6 +183,7 @@ public class OverviewFragment extends Fragment {
                 Intent intent = new Intent(getContext(), DetailActivity.class);
                 intent.putExtra("detail", forecast[clickerId]);
                 intent.putExtra("unit", curTempUnit);
+                intent.putExtra("notification", notificationState);
                 startActivityForResult(intent, DetailActivity.activityReqCode);
             }
         };//Layout的点击监听器，用于启动详细视图Fragment

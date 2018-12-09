@@ -12,16 +12,19 @@ public class SettingActivity extends SingleFragmentActivity {
     protected Fragment createFragment() {
         CityEntity setLocation = null;
         String setUnit = "";
+        boolean setNotification = true;
 
         if (getIntent() != null) {
             setLocation = (CityEntity) getIntent().getSerializableExtra("setLocation");
             setUnit = getIntent().getStringExtra("setUnit");
+            setNotification = getIntent().getBooleanExtra("setNotification", true);
         }
 
         SettingFragment settingFragment = new SettingFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("setLocation", setLocation);
         bundle.putString("setUnit", setUnit);
+        bundle.putBoolean("setNotification", setNotification);
         settingFragment.setArguments(bundle);
         return settingFragment;
     }

@@ -33,6 +33,7 @@ public class DetailFragment extends Fragment {
 
     private WeatherEntity detail; //承载详情的entity
     private String tempUnit; //温度单位
+    private boolean notification; //通知状态
 
     private CityEntity curLocation; //当前位置，用于返回给OverviewActivity
 
@@ -54,13 +55,14 @@ public class DetailFragment extends Fragment {
         if (getArguments() != null) {
             detail = (WeatherEntity) getArguments().get("detail");
             tempUnit = getArguments().getString("unit");
+            notification = getArguments().getBoolean("notification");
 
             curLocation = new CityEntity(detail.getLocation(), detail.getLatitude(), detail.getLongitude());
         }
 
         resultIntent.putExtra("curLocation", curLocation);
         resultIntent.putExtra("unit", tempUnit);
-        resultIntent.putExtra("notification", true);
+        resultIntent.putExtra("notification", notification);
         getActivity().setResult(0, resultIntent);
 
         updateDetail();
@@ -83,6 +85,7 @@ public class DetailFragment extends Fragment {
                 Intent intent = new Intent(getContext(), SettingActivity.class);
                 intent.putExtra("setLocation", curLocation);
                 intent.putExtra("setUnit", tempUnit);
+                intent.putExtra("setNotification", notification);
                 startActivityForResult(intent, SettingActivity.activityReqCode);
                 return true;
             default:
