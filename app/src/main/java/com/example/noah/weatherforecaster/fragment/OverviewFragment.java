@@ -26,10 +26,7 @@ import com.example.noah.weatherforecaster.activity.SettingActivity;
 import com.example.noah.weatherforecaster.entity.CityEntity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import com.example.noah.weatherforecaster.service.NotificationService;
-import com.example.noah.weatherforecaster.utils.ForecastDBHelper;
-import com.example.noah.weatherforecaster.utils.RIdManager;
-import com.example.noah.weatherforecaster.utils.TimeUtils;
-import com.example.noah.weatherforecaster.utils.WeatherInfoFetcher;
+import com.example.noah.weatherforecaster.utils.*;
 
 import java.util.Date;
 
@@ -49,8 +46,11 @@ public class OverviewFragment extends Fragment {
 
     private WeatherEntity today; //当前天气
     private WeatherEntity[] forecast; //预报信息
-    private String curTempUnit; //当前温度单位，默认为摄氏
-    private boolean notificationState; //通知是否开启
+
+    //新建Fragment实例
+    public static OverviewFragment newInstance() {
+        return new OverviewFragment();
+    }
 
     //-------------------------异步请求类-------------------------
     private class FetchItemsTask extends AsyncTask<String, Void, String> {
@@ -60,7 +60,10 @@ public class OverviewFragment extends Fragment {
             try {
                 today = WeatherInfoFetcher.getToday(params[0]);
                 forecast = WeatherInfoFetcher.getForecast(params[0]);
-                curTempUnit = "摄氏";
+                SettingUtils.getSetLocation().setLocation(today.getLocation());
+                SettingUtils.getSetLocation().setLatitude(today.getLatitude());
+                SettingUtils.getSetLocation().setLongitude(today.getLongitude());
+                SettingUtils.setSetTempUnit("摄氏");
                 if (params.length > 1)
                     type = params[1];
             } catch (Exception e) {
@@ -116,9 +119,7 @@ public class OverviewFragment extends Fragment {
                 return true;
             case R.id.settings:
                 Intent intent = new Intent(getContext(), SettingActivity.class);
-                intent.putExtra("setLocation", new CityEntity(today.getLocation(), today.getLatitude(), today.getLongitude()));
-                intent.putExtra("setUnit", curTempUnit);
-                intent.putExtra("setNotification", notificationState);
+                intent.putExtra("notificationStr", createNotificationStr());
                 startActivityForResult(intent, SettingActivity.activityReqCode);
                 return true;
             default:
@@ -129,21 +130,11 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SettingActivity.activityReqCode || requestCode == DetailActivity.activityReqCode) {
-            notificationState = data.getBooleanExtra("notification", true);
-            Intent contentIntent = new Intent();
-            contentIntent.putExtra("text", createNotificationStr());
-            NotificationService.setServiceAlarm(getActivity(), notificationState, contentIntent);
-
-            CityEntity curLocation  = (CityEntity) data.getSerializableExtra("curLocation");
-            String unit = data.getStringExtra("unit");
-
-            if (!curLocation.getLocation().equals(today.getLocation())) {//当设置的位置变化时，需要重新发送网络请求
-                today.setLatitude(curLocation.getLatitude());
-                today.setLongitude(curLocation.getLongitude());
-                new FetchItemsTask().execute(curLocation.getLocation(), unit);
-            }
+            //当设置的位置变化时，需要重新发送网络请求
+            if (!SettingUtils.getSetLocation().getLocation().equals(today.getLocation()))
+                new FetchItemsTask().execute(SettingUtils.getSetLocation().getLocation(), SettingUtils.getSetTempUnit());
             else {
-                updateTempVal(unit);
+                updateTempVal(SettingUtils.getSetTempUnit());
                 updateWeatherInfo();
             }
         }
@@ -182,8 +173,6 @@ public class OverviewFragment extends Fragment {
                 //带参数启动承载详细视图的Activity
                 Intent intent = new Intent(getContext(), DetailActivity.class);
                 intent.putExtra("detail", forecast[clickerId]);
-                intent.putExtra("unit", curTempUnit);
-                intent.putExtra("notification", notificationState);
                 startActivityForResult(intent, DetailActivity.activityReqCode);
             }
         };//Layout的点击监听器，用于启动详细视图Fragment
@@ -257,32 +246,17 @@ public class OverviewFragment extends Fragment {
     }
 
     /**
-     * 温度单位转换
-     * @param toType 目标类型 ("摄氏"/"华氏")
-     * @param value 原始温度
-     * @return 转化结果
-     */
-    private int transformTemperature(String toType, int value) {
-        int res = 0;
-        if (toType.equals("摄氏"))
-            res = Double.valueOf((value - 32) / 1.8).intValue();
-        if (toType.equals("华氏"))
-            res = Double.valueOf(value * 1.8 + 32).intValue();
-        return res;
-    }
-
-    /**
      * 更新温度单位
      * @param toType 目标类型 ("摄氏"/"华氏")
      */
     private void updateTempVal(String toType) {
-        if (toType.equals(curTempUnit))
+        if (toType.equals(SettingUtils.getSetTempUnit()))
             return;
-        curTempUnit = toType;
-        today.setCurrentDegree(transformTemperature(toType, today.getCurrentDegree()));
+        SettingUtils.setSetTempUnit(toType);
+        today.setCurrentDegree(SettingUtils.transformTemperature(toType, today.getCurrentDegree()));
         for (int i = 0; i < 7; i++) {
-            forecast[i].setMaxDegree(transformTemperature(toType, forecast[i].getMaxDegree()));
-            forecast[i].setMinDegree(transformTemperature(toType, forecast[i].getMinDegree()));
+            forecast[i].setMaxDegree(SettingUtils.transformTemperature(toType, forecast[i].getMaxDegree()));
+            forecast[i].setMinDegree(SettingUtils.transformTemperature(toType, forecast[i].getMinDegree()));
         }
     }
 
@@ -337,9 +311,9 @@ public class OverviewFragment extends Fragment {
      */
     private void launchMapApp() {
         String uri = "androidamap://viewMap?sourceApplication=appname"
-                + "&poiname=" + today.getLocation()
-                + "&lat=" + today.getLatitude()
-                + "&lon=" + today.getLongitude()
+                + "&poiname=" + SettingUtils.getSetLocation().getLocation()
+                + "&lat=" + SettingUtils.getSetLocation().getLatitude()
+                + "&lon=" + SettingUtils.getSetLocation().getLongitude()
                 + "&dev=1";
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
@@ -365,8 +339,11 @@ public class OverviewFragment extends Fragment {
         SharedPreferences pref = getActivity().getSharedPreferences("state_data", Context.MODE_PRIVATE);
 
         //加载设置信息
-        curTempUnit = pref.getString("curTempUnit", "摄氏");//缺省值为摄氏
-        notificationState = pref.getBoolean("notificationState", true);//缺省值为真
+        SettingUtils.setSetLocation(new CityEntity(pref.getString("setLocationName", "北京"),
+                Double.valueOf(pref.getString("setLocationLatitude", "39.90498734")),
+                Double.valueOf(pref.getString("setLocationLongitude", "116.40528870"))));
+        SettingUtils.setSetTempUnit(pref.getString("setTempUnit", "摄氏"));//缺省值为摄氏
+        SettingUtils.setSetNotificationState(pref.getBoolean("setNotificationState", false));//缺省值为假
 
         //加载当前天气信息
         today = new WeatherEntity();
@@ -381,6 +358,9 @@ public class OverviewFragment extends Fragment {
         //从数据库中加载预报信息
         ForecastDBHelper dbHelper = new ForecastDBHelper(getContext(), "ForecastInfo.db", null, 1);
         forecast = dbHelper.loadSavedForecastInfo();
+
+        //启动时根据状态发送通知
+        NotificationService.setServiceAlarm(getActivity(), SettingUtils.getSetNotificationState(), createNotificationStr());
     }
 
     /**
@@ -390,8 +370,12 @@ public class OverviewFragment extends Fragment {
         SharedPreferences.Editor editor = getActivity().getSharedPreferences("state_data", Context.MODE_PRIVATE).edit();
 
         //保存设置状态
-        editor.putBoolean("notificationState", notificationState);
-        editor.putString("curTempUnit", curTempUnit);
+        editor.putString("setLocationName", SettingUtils.getSetLocation().getLocation());
+        editor.putString("setLocationLatitude", String.valueOf(SettingUtils.getSetLocation().getLatitude()));
+        editor.putString("setLocationLongitude", String.valueOf(SettingUtils.getSetLocation().getLongitude()));
+        editor.putString("setTempUnit", SettingUtils.getSetTempUnit());
+        editor.putBoolean("setNotificationState", SettingUtils.getSetNotificationState());
+
 
         //保存today对象中的信息
         editor.putString("location", today.getLocation());

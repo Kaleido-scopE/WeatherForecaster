@@ -47,8 +47,16 @@ public class NotificationService extends IntentService {
             notificationManager.notify(0, notification);
     }
 
-    public static void setServiceAlarm(Context context, boolean isOn, Intent contentIntent) {
-        contentIntent.setClass(context, NotificationService.class);
+    /**
+     * 设置定时推送服务
+     * @param context 调用者context
+     * @param isOn 标记是否打开推送服务
+     * @param notificationStr 推送字符串
+     */
+    public static void setServiceAlarm(Context context, boolean isOn, String notificationStr) {
+        Intent contentIntent = new Intent(context, NotificationService.class);
+        contentIntent.putExtra("text", notificationStr);
+
         PendingIntent pendingIntent = PendingIntent.getService(context, 0, contentIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
@@ -57,10 +65,10 @@ public class NotificationService extends IntentService {
             Log.i(TAG, "activated");
             try {
                 pendingIntent.send();
+                alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 60 * 1000, pendingIntent);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime(), 60 * 1000, pendingIntent);
         }
         else {
             Log.i(TAG, "canceled");

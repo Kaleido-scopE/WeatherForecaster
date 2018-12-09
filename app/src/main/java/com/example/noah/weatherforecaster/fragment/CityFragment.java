@@ -1,20 +1,19 @@
 package com.example.noah.weatherforecaster.fragment;
 
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.example.noah.weatherforecaster.R;
 import com.example.noah.weatherforecaster.entity.CityEntity;
+import com.example.noah.weatherforecaster.utils.SettingUtils;
 import com.example.noah.weatherforecaster.utils.WeatherInfoFetcher;
 
 import java.util.ArrayList;
@@ -24,7 +23,22 @@ import java.util.Locale;
 public class CityFragment extends Fragment {
     private RecyclerView cityList;
 
-    private Intent resultIntent = new Intent();
+    //新建Fragment实例
+    public static CityFragment newInstance() {
+        return new CityFragment();
+    }
+
+    //-------------------------生命周期函数-------------------------
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_city, container, false);
+
+        cityList = v.findViewById(R.id.city_list);
+        new FetchCityItemsTask().execute();
+
+        return v;
+    }
 
     //-------------------------必要的内部类-------------------------
 
@@ -48,13 +62,13 @@ public class CityFragment extends Fragment {
                     double lat = Double.valueOf(latitude.getText().toString().substring(5));
                     double lon = Double.valueOf(longitude.getText().toString().substring(5));
 
-                    resultIntent.putExtra("location", new CityEntity(location, lat, lon));
-                    getActivity().setResult(0, resultIntent);
+                    SettingUtils.setSetLocation(new CityEntity(location, lat, lon));
                     getActivity().finish();
                 }
             });
         }
 
+        //设定每一项的显示效果
         public void bind(CityEntity city) {
             String latitudeStr = "lat: " + String.format(Locale.US, "%.3f", city.getLatitude());
             String longitudeStr = "lon: " + String.format(Locale.US, "%.3f", city.getLongitude());
@@ -112,25 +126,4 @@ public class CityFragment extends Fragment {
             cityList.setAdapter(new CityAdapter(cities));
         }
     }
-
-    //-------------------------生命周期函数-------------------------
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_city, container, false);
-
-        CityEntity cityEntity = null;
-        if (getArguments() != null)
-            cityEntity = (CityEntity) getArguments().getSerializable("originLocation");
-
-        resultIntent.putExtra("location", cityEntity);
-        getActivity().setResult(0, resultIntent);
-
-        new FetchCityItemsTask().execute();
-
-        cityList = v.findViewById(R.id.city_list);
-
-        return v;
-    }
-
 }

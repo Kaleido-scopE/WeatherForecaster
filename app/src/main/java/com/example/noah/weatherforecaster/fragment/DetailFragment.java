@@ -4,13 +4,11 @@ package com.example.noah.weatherforecaster.fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.*;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.example.noah.weatherforecaster.R;
 import com.example.noah.weatherforecaster.activity.SettingActivity;
-import com.example.noah.weatherforecaster.entity.CityEntity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import com.example.noah.weatherforecaster.utils.RIdManager;
 import com.example.noah.weatherforecaster.utils.TimeUtils;
@@ -32,12 +30,15 @@ public class DetailFragment extends Fragment {
     private ImageView weatherIcon; //天气图标
 
     private WeatherEntity detail; //承载详情的entity
-    private String tempUnit; //温度单位
-    private boolean notification; //通知状态
 
-    private CityEntity curLocation; //当前位置，用于返回给OverviewActivity
-
-    private Intent resultIntent = new Intent(); //承载返回结果的Intent
+    //新建Fragment实例
+    public static DetailFragment newInstance(WeatherEntity weatherEntity) {
+        DetailFragment detailFragment = new DetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("detail", weatherEntity);
+        detailFragment.setArguments(bundle);
+        return detailFragment;
+    }
 
     //-------------------------生命周期函数-------------------------
     @Override
@@ -52,18 +53,8 @@ public class DetailFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_detail, container, false);
         initView(v);
 
-        if (getArguments() != null) {
+        if (getArguments() != null)
             detail = (WeatherEntity) getArguments().get("detail");
-            tempUnit = getArguments().getString("unit");
-            notification = getArguments().getBoolean("notification");
-
-            curLocation = new CityEntity(detail.getLocation(), detail.getLatitude(), detail.getLongitude());
-        }
-
-        resultIntent.putExtra("curLocation", curLocation);
-        resultIntent.putExtra("unit", tempUnit);
-        resultIntent.putExtra("notification", notification);
-        getActivity().setResult(0, resultIntent);
 
         updateDetail();
         return v;
@@ -83,9 +74,6 @@ public class DetailFragment extends Fragment {
                 return true;
             case R.id.settings:
                 Intent intent = new Intent(getContext(), SettingActivity.class);
-                intent.putExtra("setLocation", curLocation);
-                intent.putExtra("setUnit", tempUnit);
-                intent.putExtra("setNotification", notification);
                 startActivityForResult(intent, SettingActivity.activityReqCode);
                 return true;
             default:
@@ -95,16 +83,8 @@ public class DetailFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SettingActivity.activityReqCode) {
-            curLocation = (CityEntity) data.getSerializableExtra("curLocation");
-            tempUnit = data.getStringExtra("unit");
-
-            resultIntent.putExtra("curLocation", curLocation);
-            resultIntent.putExtra("unit", tempUnit);
-            resultIntent.putExtra("notification", data.getBooleanExtra("notification", true));
-            getActivity().setResult(0, resultIntent);
+        if (requestCode == SettingActivity.activityReqCode)
             getActivity().finish();
-        }
     }
 
     //-------------------------其他函数-------------------------

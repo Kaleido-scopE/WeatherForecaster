@@ -37,12 +37,4 @@ public class TimeUtils {
     public static String hmFromDate(Date date) {
         return HM.format(date);
     }
-
-    public static void main(String[] args) throws ParseException {
-        Date date1 = new Date();
-        Long dateL = date1.getTime();
-        Date date2 = new Date(dateL);
-        System.out.println(date1);
-        System.out.println(date2);
-    }
 }
