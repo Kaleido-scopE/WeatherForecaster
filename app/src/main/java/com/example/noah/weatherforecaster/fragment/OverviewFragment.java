@@ -26,6 +26,7 @@ import com.example.noah.weatherforecaster.activity.SettingActivity;
 import com.example.noah.weatherforecaster.entity.CityEntity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import com.example.noah.weatherforecaster.service.NotificationService;
+import com.example.noah.weatherforecaster.utils.ForecastDBHelper;
 import com.example.noah.weatherforecaster.utils.RIdManager;
 import com.example.noah.weatherforecaster.utils.TimeUtils;
 import com.example.noah.weatherforecaster.utils.WeatherInfoFetcher;
@@ -88,10 +89,18 @@ public class OverviewFragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_overview, container, false);
         initView(v);
+        loadState();
+        updateWeatherInfo();
         requestLocatingPrivilege();
-        new FetchItemsTask().execute("changsha");
-        getLocation();
+        //new FetchItemsTask().execute("changsha");
+        updateLocationInfo();
         return v;
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        saveState();
     }
 
     @Override
@@ -145,7 +154,7 @@ public class OverviewFragment extends Fragment {
         if (requestCode == 111) {
             //处理位置信息授权结果
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                getLocation();
+                updateLocationInfo();
             else {
                 Toast.makeText(getContext(), "权限不足，无法拉取天气信息，请打开位置权限后再试", Toast.LENGTH_LONG).show();
                 getActivity().finish();
@@ -241,6 +250,8 @@ public class OverviewFragment extends Fragment {
             weekNext[i].setText(TimeUtils.weekFromDate(forecast[i].getDate()));
             minTemNext[i].setText(minTem);
             maxTemNext[i].setText(maxTem);
+            weatherIcon[i].setImageResource(RIdManager.getRes("drawable", "i" + forecast[i].getWeatherCode()));
+            weatherText[i].setText(forecast[i].getWeatherName());
         }
     }
 
@@ -289,7 +300,7 @@ public class OverviewFragment extends Fragment {
     /**
      * 获取当前位置，更新today中的经纬度
      */
-    private void getLocation() {
+    private void updateLocationInfo() {
         if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
@@ -301,7 +312,7 @@ public class OverviewFragment extends Fragment {
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 8, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.i("getLocation", "Changed");
+                Log.i("updateLocationInfo", "Changed");
                 new FetchItemsTask().execute(location.getLongitude() + "," + location.getLatitude());
                 locationManager.removeUpdates(this);
             }
@@ -343,11 +354,11 @@ public class OverviewFragment extends Fragment {
      * @return 拼接后的消息字符串
      */
     private String createNotificationStr() {
-        return forecast[0].getLocation()  + ": " + forecast[0].getWeatherName() + "    " + forecast[0].getMaxDegree() + "°/" + forecast[0].getMinDegree() + "°";
+        return today.getLocation()  + ": " + today.getWeatherName() + "    " + forecast[0].getMaxDegree() + "°/" + forecast[0].getMinDegree() + "°";
     }
 
     /**
-     * 启动应用时，调用该方法，从SharedPreferences中取得应用的部分状态
+     * 启动应用时，调用该方法，从SharedPreferences和数据库中取得应用的部分状态
      */
     private void loadState() {
         SharedPreferences pref = getActivity().getSharedPreferences("state_data", Context.MODE_PRIVATE);
@@ -365,10 +376,14 @@ public class OverviewFragment extends Fragment {
         today.setWeatherName(pref.getString("weatherName", "多云"));
         today.setCurrentDegree(pref.getInt("currentDegree", 14));
         today.setDate(new Date(pref.getLong("updateTime", System.currentTimeMillis())));
+
+        //从数据库中加载预报信息
+        ForecastDBHelper dbHelper = new ForecastDBHelper(getContext(), "ForecastInfo.db", null, 1);
+        forecast = dbHelper.loadSavedForecastInfo();
     }
 
     /**
-     * 关闭应用时，调用该方法，利用SharedPreferences保存当前应用的一些状态
+     * 关闭应用时，调用该方法，利用SharedPreferences和数据库保存当前应用的一些状态
      */
     private void saveState() {
         SharedPreferences.Editor editor = getActivity().getSharedPreferences("state_data", Context.MODE_PRIVATE).edit();
@@ -386,5 +401,9 @@ public class OverviewFragment extends Fragment {
         editor.putInt("currentDegree", today.getCurrentDegree());
         editor.putLong("updateTime", today.getDate().getTime());
         editor.apply();
+
+        //将预报信息存于数据库中
+        ForecastDBHelper dbHelper = new ForecastDBHelper(getContext(), "ForecastInfo.db", null, 1);
+        dbHelper.updateForecastInfo(forecast);
     }
 }

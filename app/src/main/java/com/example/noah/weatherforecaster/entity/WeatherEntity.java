@@ -21,6 +21,28 @@ public class WeatherEntity implements Serializable {
     private int precipRate; //降水概率
     private Date date; //对应日期
 
+    public WeatherEntity() {
+    }
+
+    public WeatherEntity(String location, double latitude, double longitude, int weatherCode, String weatherName, int minDegree, int maxDegree, int currentDegree, int humidity, int atmoPressure, int windSpeed, String windScale, String windDir, int precipitation, int precipRate, Date date) {
+        this.location = location;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.weatherCode = weatherCode;
+        this.weatherName = weatherName;
+        this.minDegree = minDegree;
+        this.maxDegree = maxDegree;
+        this.currentDegree = currentDegree;
+        this.humidity = humidity;
+        this.atmoPressure = atmoPressure;
+        this.windSpeed = windSpeed;
+        this.windScale = windScale;
+        this.windDir = windDir;
+        this.precipitation = precipitation;
+        this.precipRate = precipRate;
+        this.date = date;
+    }
+
     public String getLocation() {
         return location;
     }
