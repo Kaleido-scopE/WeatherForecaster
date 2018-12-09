@@ -46,6 +46,7 @@ public class OverviewFragment extends Fragment {
 
     private WeatherEntity today; //当前天气
     private WeatherEntity[] forecast; //预报信息
+    private String usedTempUnit; //当前today、forecast中正使用的温度单位
 
     //新建Fragment实例
     public static OverviewFragment newInstance() {
@@ -60,6 +61,7 @@ public class OverviewFragment extends Fragment {
             try {
                 today = WeatherInfoFetcher.getToday(params[0]);
                 forecast = WeatherInfoFetcher.getForecast(params[0]);
+                usedTempUnit = "摄氏";
                 SettingUtils.getSetLocation().setLocation(today.getLocation());
                 SettingUtils.getSetLocation().setLatitude(today.getLatitude());
                 SettingUtils.getSetLocation().setLongitude(today.getLongitude());
@@ -269,9 +271,9 @@ public class OverviewFragment extends Fragment {
      * @param toType 目标类型 ("摄氏"/"华氏")
      */
     private void updateTempVal(String toType) {
-        if (toType.equals(SettingUtils.getSetTempUnit()))
+        if (toType.equals(usedTempUnit))
             return;
-        SettingUtils.setSetTempUnit(toType);
+        usedTempUnit = toType;
         today.setCurrentDegree(SettingUtils.transformTemperature(toType, today.getCurrentDegree()));
         for (int i = 0; i < 7; i++) {
             forecast[i].setMaxDegree(SettingUtils.transformTemperature(toType, forecast[i].getMaxDegree()));
@@ -363,6 +365,7 @@ public class OverviewFragment extends Fragment {
                 Double.valueOf(pref.getString("setLocationLongitude", "116.40528870"))));
         SettingUtils.setSetTempUnit(pref.getString("setTempUnit", "摄氏"));//缺省值为摄氏
         SettingUtils.setSetNotificationState(pref.getBoolean("setNotificationState", false));//缺省值为假
+        usedTempUnit = pref.getString("usedTempUnit", "摄氏");
 
         //加载当前天气信息
         today = new WeatherEntity();
@@ -394,7 +397,7 @@ public class OverviewFragment extends Fragment {
         editor.putString("setLocationLongitude", String.valueOf(SettingUtils.getSetLocation().getLongitude()));
         editor.putString("setTempUnit", SettingUtils.getSetTempUnit());
         editor.putBoolean("setNotificationState", SettingUtils.getSetNotificationState());
-
+        editor.putString("usedTempUnit", usedTempUnit);
 
         //保存today对象中的信息
         editor.putString("location", today.getLocation());
