@@ -1,7 +1,6 @@
 package com.example.noah.weatherforecaster.utils;
 
 import android.net.Uri;
-import android.util.Log;
 import com.example.noah.weatherforecaster.entity.CityEntity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
 import org.json.JSONArray;

@@ -48,10 +48,12 @@ public class SettingUtils {
      */
     public static int transformTemperature(String toType, int value) {
         int res = 0;
+
+        //四舍五入计算
         if (toType.equals("摄氏"))
-            res = Double.valueOf((value - 32) / 1.8).intValue();
+            res = (int) Math.round((value - 32) / 1.8);;
         if (toType.equals("华氏"))
-            res = Double.valueOf(value * 1.8 + 32).intValue();
+            res = (int) Math.round(value * 1.8 + 32);
         return res;
     }
 }
