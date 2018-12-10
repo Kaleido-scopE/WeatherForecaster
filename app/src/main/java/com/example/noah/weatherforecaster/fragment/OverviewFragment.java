@@ -62,9 +62,7 @@ public class OverviewFragment extends Fragment {
                 today = WeatherInfoFetcher.getToday(params[0]);
                 forecast = WeatherInfoFetcher.getForecast(params[0]);
                 usedTempUnit = "摄氏";
-                SettingUtils.getSetLocation().setLocation(today.getLocation());
-                SettingUtils.getSetLocation().setLatitude(today.getLatitude());
-                SettingUtils.getSetLocation().setLongitude(today.getLongitude());
+                SettingUtils.setSetLocation(new CityEntity(today.getLocation(), today.getLatitude(), today.getLongitude()));
                 SettingUtils.setSetTempUnit("摄氏");
                 if (params.length > 1)
                     type = params[1];
@@ -77,6 +75,7 @@ public class OverviewFragment extends Fragment {
         @Override
         protected void onPostExecute(String param) {
             super.onPostExecute(param);
+            Toast.makeText(getActivity(), "已获取天气信息", Toast.LENGTH_SHORT).show();
             updateTempVal(param);
             updateWeatherInfo();
         }
@@ -104,6 +103,7 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        //创建activity后判断此时是否是平板视图
         SettingUtils.setIsTwoPane(getActivity().findViewById(R.id.detail_container) != null);
     }
 
@@ -117,12 +117,20 @@ public class OverviewFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_overview, menu);
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.refresh:
+                new FetchItemsTask().execute(SettingUtils.getSetLocation().getLocation(), SettingUtils.getSetTempUnit());
+                //如果是平板视图，返回后清空detail_container
+                if (SettingUtils.getIsTwoPane()) {
+                    Fragment fragment = getFragmentManager().findFragmentById(R.id.detail_container);
+                    if (fragment != null)
+                        getFragmentManager().beginTransaction().hide(fragment).commit();
+                }
+                return true;
             case R.id.map_location:
                 launchMapApp();
                 return true;
@@ -308,7 +316,7 @@ public class OverviewFragment extends Fragment {
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 8, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.i("updateLocationInfo", "Changed");
+                Log.i("updateLocationInfo", "Change To: " + location.getLongitude() + ", " + location.getLatitude());
                 new FetchItemsTask().execute(location.getLongitude() + "," + location.getLatitude());
                 locationManager.removeUpdates(this);
             }

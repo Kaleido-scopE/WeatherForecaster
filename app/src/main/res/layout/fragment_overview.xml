@@ -16,8 +16,8 @@
                 android:layout_height="0dp"
                 android:layout_weight="6"
                 android:paddingTop="20dp"
-                android:paddingLeft="50dp"
-                android:paddingRight="50dp"
+                android:paddingLeft="20dp"
+                android:paddingRight="20dp"
                 android:orientation="vertical"
                 android:focusable="true"
                 android:clickable="true">
@@ -667,4 +667,5 @@
                 android:background="#d9d9d9"
                 />
     </LinearLayout>
+
 </ScrollView>
