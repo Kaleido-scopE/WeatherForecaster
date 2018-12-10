@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.example.noah.weatherforecaster.R;
 import com.example.noah.weatherforecaster.entity.CityEntity;
 import com.example.noah.weatherforecaster.utils.SettingUtils;
@@ -108,13 +109,16 @@ public class CityFragment extends Fragment {
     //网络请求类
     private class FetchCityItemsTask extends AsyncTask<Void, Void, Void> {
         private List<CityEntity> cities = new ArrayList<>();
+        private boolean isNetworkOn = WeatherInfoFetcher.isNetworkOn(getActivity());
 
         @Override
         protected Void doInBackground(Void... voids) {
-            try {
-                cities = WeatherInfoFetcher.getCityList(50, "cn");
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (isNetworkOn) {
+                try {
+                    cities = WeatherInfoFetcher.getCityList(50, "cn");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             return null;
         }
@@ -122,8 +126,12 @@ public class CityFragment extends Fragment {
         @Override
         protected void onPostExecute(Void param) {
             super.onPostExecute(param);
-            cityList.setLayoutManager(new LinearLayoutManager(getActivity()));
-            cityList.setAdapter(new CityAdapter(cities));
+            if (isNetworkOn) {
+                cityList.setLayoutManager(new LinearLayoutManager(getActivity()));
+                cityList.setAdapter(new CityAdapter(cities));
+            }
+            else
+                Toast.makeText(getActivity(), "没有网络连接，请打开网络！", Toast.LENGTH_LONG).show();
         }
     }
 }

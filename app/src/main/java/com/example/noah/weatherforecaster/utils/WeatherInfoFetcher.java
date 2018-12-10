@@ -1,5 +1,8 @@
 package com.example.noah.weatherforecaster.utils;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import com.example.noah.weatherforecaster.entity.CityEntity;
 import com.example.noah.weatherforecaster.entity.WeatherEntity;
@@ -150,5 +153,19 @@ public class WeatherInfoFetcher {
         } catch (Exception e) {
             return cities;
         }
+    }
+
+    /**
+     * 判断是否有网络连接
+     * @return 标识状态的布尔值
+     */
+    public static boolean isNetworkOn(Context context) {
+        if (context != null) {
+            ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+            if (networkInfo != null)
+                return networkInfo.isConnected();
+        }
+        return false;
     }
 }

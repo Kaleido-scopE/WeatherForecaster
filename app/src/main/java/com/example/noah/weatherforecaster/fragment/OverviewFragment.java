@@ -55,19 +55,23 @@ public class OverviewFragment extends Fragment {
 
     //-------------------------异步请求类-------------------------
     private class FetchItemsTask extends AsyncTask<String, Void, String> {
+        private boolean isNetworkOn = WeatherInfoFetcher.isNetworkOn(getActivity());
+
         @Override
         protected String doInBackground(String... params) {//params变长；参数1必选，表示请求位置；参数2可选，表示目标温度单位
             String type = "摄氏";
-            try {
-                today = WeatherInfoFetcher.getToday(params[0]);
-                forecast = WeatherInfoFetcher.getForecast(params[0]);
-                usedTempUnit = "摄氏";
-                SettingUtils.setSetLocation(new CityEntity(today.getLocation(), today.getLatitude(), today.getLongitude()));
-                SettingUtils.setSetTempUnit("摄氏");
-                if (params.length > 1)
-                    type = params[1];
-            } catch (Exception e) {
-                e.printStackTrace();
+            if (isNetworkOn) {
+                try {
+                    today = WeatherInfoFetcher.getToday(params[0]);
+                    forecast = WeatherInfoFetcher.getForecast(params[0]);
+                    usedTempUnit = "摄氏";
+                    SettingUtils.getSetLocation().setLocation(today.getLocation());
+                    SettingUtils.setSetTempUnit("摄氏");
+                    if (params.length > 1)
+                        type = params[1];
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             return type;
         }
@@ -75,9 +79,12 @@ public class OverviewFragment extends Fragment {
         @Override
         protected void onPostExecute(String param) {
             super.onPostExecute(param);
-            Toast.makeText(getActivity(), "已获取天气信息", Toast.LENGTH_SHORT).show();
-            updateTempVal(param);
-            updateWeatherInfo();
+            if (isNetworkOn) {
+                updateTempVal(param);
+                updateWeatherInfo();
+            }
+            else
+                Toast.makeText(getActivity(), "没有网络连接，请打开网络！", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -122,14 +129,12 @@ public class OverviewFragment extends Fragment {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.relocate:
+                updateLocationInfo();
+                clearDetailedContainer();
             case R.id.refresh:
                 new FetchItemsTask().execute(SettingUtils.getSetLocation().getLocation(), SettingUtils.getSetTempUnit());
-                //如果是平板视图，返回后清空detail_container
-                if (SettingUtils.getIsTwoPane()) {
-                    Fragment fragment = getFragmentManager().findFragmentById(R.id.detail_container);
-                    if (fragment != null)
-                        getFragmentManager().beginTransaction().hide(fragment).commit();
-                }
+                clearDetailedContainer();
                 return true;
             case R.id.map_location:
                 launchMapApp();
@@ -147,13 +152,7 @@ public class OverviewFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SettingActivity.activityReqCode || requestCode == DetailActivity.activityReqCode) {
-            //如果是平板视图，返回后清空detail_container
-            if (SettingUtils.getIsTwoPane()) {
-                Fragment fragment = getFragmentManager().findFragmentById(R.id.detail_container);
-                if (fragment != null)
-                    getFragmentManager().beginTransaction().hide(fragment).commit();
-            }
-
+            clearDetailedContainer();
             //当设置的位置变化时，需要重新发送网络请求
             if (!SettingUtils.getSetLocation().getLocation().equals(today.getLocation()))
                 new FetchItemsTask().execute(SettingUtils.getSetLocation().getLocation(), SettingUtils.getSetTempUnit());
@@ -275,6 +274,18 @@ public class OverviewFragment extends Fragment {
     }
 
     /**
+     * 测试是否要清空详细视图
+     */
+    private void clearDetailedContainer() {
+        //如果是平板视图，返回后清空detail_container，否则不执行操作
+        if (SettingUtils.getIsTwoPane()) {
+            Fragment fragment = getFragmentManager().findFragmentById(R.id.detail_container);
+            if (fragment != null)
+                getFragmentManager().beginTransaction().hide(fragment).commit();
+        }
+    }
+
+    /**
      * 更新温度单位
      * @param toType 目标类型 ("摄氏"/"华氏")
      */
@@ -310,14 +321,19 @@ public class OverviewFragment extends Fragment {
             return;
         }
 
+        Toast.makeText(getActivity(), "正在获取位置，请稍等", Toast.LENGTH_SHORT).show();
+
         final LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
         //Network Listener
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 8, new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                Log.i("updateLocationInfo", "Change To: " + location.getLongitude() + ", " + location.getLatitude());
-                new FetchItemsTask().execute(location.getLongitude() + "," + location.getLatitude());
+                Log.i("updateLocationInfo", "Change To: " + location.getLongitude() + "," + location.getLatitude());
+                Toast.makeText(getActivity(), "已获取到位置", Toast.LENGTH_SHORT).show();
+                SettingUtils.getSetLocation().setLatitude(location.getLatitude());//更新纬度
+                SettingUtils.getSetLocation().setLongitude(location.getLongitude());//更新经度
+                new FetchItemsTask().execute(location.getLongitude() + "," + location.getLatitude());//在请求中更新Location
                 locationManager.removeUpdates(this);
             }
             @Override
