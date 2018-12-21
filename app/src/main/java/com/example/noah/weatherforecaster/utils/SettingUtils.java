@@ -2,6 +2,7 @@ package com.example.noah.weatherforecaster.utils;
 
 import com.example.noah.weatherforecaster.entity.CityEntity;
 
+//管理全局的设置状态
 public class SettingUtils {
     private static CityEntity setLocation = new CityEntity();
     private static String setTempUnit = "摄氏";

@@ -4,6 +4,7 @@ import com.example.noah.weatherforecaster.R;
 
 import java.lang.reflect.Field;
 
+//RID管理类，可以将id以字符串形式表示
 public class RIdManager {
     public static int getRes(String type, String name) {
         try {

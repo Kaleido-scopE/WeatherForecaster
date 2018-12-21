@@ -6,6 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+//时间管理类，提供各种时间字符串和日期对象间的相互转换
 public class TimeUtils {
     private static DateFormat DATE = new SimpleDateFormat("yyyy-MM-dd", Locale.CHINA);
     private static DateFormat DATE_MIN = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.CHINA);

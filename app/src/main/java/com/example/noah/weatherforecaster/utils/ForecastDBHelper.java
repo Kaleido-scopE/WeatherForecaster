@@ -9,6 +9,7 @@ import com.example.noah.weatherforecaster.entity.WeatherEntity;
 
 import java.util.Date;
 
+//数据库管理类
 public class ForecastDBHelper extends SQLiteOpenHelper {
 
     private static final String CREATE_FORECAST_INFO = "create table forecast_info ("

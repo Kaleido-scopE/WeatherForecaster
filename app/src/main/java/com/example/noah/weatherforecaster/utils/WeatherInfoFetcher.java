@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+//天气信息获取类，提供封装好的Web API请求结果及网络监测方法
 public class WeatherInfoFetcher {
     private static final String key = "e2ac4a73247349b1956710b971f98c16";
 
